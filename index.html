@@ -27,15 +27,14 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .ni.on::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--ac1);border-radius:0 3px 3px 0}
 .ni i{width:20px;text-align:center;font-size:.85rem;flex-shrink:0}
 .ni .bg{margin-left:auto;background:var(--ac1);color:#fff;font-size:.55rem;padding:2px 7px;border-radius:10px;font-weight:700}
-.nich{display:flex;align-items:center;gap:8px;padding:7px 14px;font-size:.78rem;color:var(--t3);font-weight:600;cursor:pointer;transition:background .15s,color .15s;letter-spacing:.3px;border-radius:var(--r1);margin:1px 6px;user-select:none}
-.nich:hover{background:rgba(148,163,184,.08);color:var(--t2)}
-.nich .chev{font-size:.55rem;transition:transform .2s ease;width:14px;text-align:center;flex-shrink:0;color:var(--t3)}
-.nich.exp .chev{transform:rotate(90deg)}
-.nichunit{padding-left:10px;font-size:.73rem}
-.nichch{padding-left:22px;font-size:.7rem}
-.nichsub{padding-left:36px}
-.nichsub i{font-size:.7rem;opacity:.5}
-.nichsub:hover i{opacity:.8}
+.sb-h{display:flex;align-items:center;gap:8px;padding:7px 14px;font-size:.78rem;color:var(--t3);font-weight:600;cursor:pointer;transition:background .15s,color .15s;letter-spacing:.3px;border-radius:var(--r1);margin:1px 6px;user-select:none}
+.sb-h:hover{background:rgba(148,163,184,.08);color:var(--t2)}
+.sb-h .ti{transition:transform .2s ease;color:var(--t3);font-size:.55rem;width:14px;text-align:center;flex-shrink:0}
+.sb-h.op .ti{transform:rotate(180deg)}
+.sb-c{display:none;padding:2px 0 2px 16px}
+.sb-c.op{display:block}
+.sb-h2{padding-left:14px;font-size:.73rem}
+.sb-h3{padding-left:28px;font-size:.7rem}
 .sfoot{padding:14px 20px;border-top:1px solid var(--br1);font-size:.65rem;color:var(--t3);text-align:center}
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .mhdr{height:56px;border-bottom:1px solid var(--br1);display:flex;align-items:center;padding:0 28px;gap:16px;background:var(--bg1);flex-shrink:0}
@@ -142,9 +141,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .tab button{flex:1;padding:9px 14px;border-radius:var(--r1);border:none;background:transparent;color:var(--t2);font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--tr)}
 .tab button.on{background:var(--ac1);color:#fff}
 .tab button:hover:not(.on){background:var(--bg4)}
-.chsubs{display:none}
-.chsubs.exp{display:block}
-.chsubs2{padding-left:10px}
 .apikey-row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
 .apikey-row input{flex:1}
 .apikey-row .btn-del{background:var(--er);color:#fff;border:none;border-radius:var(--r1);width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:var(--tr);flex-shrink:0}
@@ -301,26 +297,26 @@ function buildSidebar() {
   html += '<div class="nsec"><div class="nst">Library</div>';
   BOOKS.forEach(function(book) {
     var bookExp = S.expNav['b:' + book.id] || false;
-    html += '<div class="nich' + (bookExp ? ' exp' : '') + '" data-nv="b:' + book.id + '" onclick="toggleNav(\'b:' + book.id + '\')">';
-    html += '<i class="fas fa-chevron-right chev"></i><i class="' + book.icon + '"></i> ' + book.name + '</div>';
-    html += '<div class="chsubs' + (bookExp ? ' exp' : '') + '" id="nv-b:' + book.id + '">';
+    html += '<div class="sb-h' + (bookExp ? ' op' : '') + '" onclick="toggleSB(this,\'b:' + book.id + '\')">';
+    html += '<i class="fas fa-chevron-down ti"></i><i class="' + book.icon + '"></i> ' + book.name + '</div>';
+    html += '<div class="sb-c' + (bookExp ? ' op' : '') + '">';
 
     U.forEach(function(u) {
       var unitExp = S.expNav['u:' + u.id] || false;
-      html += '<div class="nich nichunit' + (unitExp ? ' exp' : '') + '" data-nv="u:' + u.id + '" onclick="event.stopPropagation();toggleNav(\'u:' + u.id + '\')">';
-      html += '<i class="fas fa-chevron-right chev"></i><i class="' + (u.ic || 'fas fa-book') + '"></i> ' + u.n + ': ' + u.t + '</div>';
-      html += '<div class="chsubs' + (unitExp ? ' exp' : '') + '" id="nv-u:' + u.id + '">';
+      html += '<div class="sb-h sb-h2' + (unitExp ? ' op' : '') + '" onclick="toggleSB(this,\'u:' + u.id + '\')">';
+      html += '<i class="fas fa-chevron-down ti"></i><i class="' + (u.ic || 'fas fa-book') + '"></i> ' + u.n + ': ' + u.t + '</div>';
+      html += '<div class="sb-c' + (unitExp ? ' op' : '') + '">';
 
       if (u.ch) {
         u.ch.forEach(function(ch) {
           var chKey = u.id + ':' + ch.id;
           var chExp = S.expNav['c:' + chKey] || false;
-          html += '<div class="nich nichch' + (chExp ? ' exp' : '') + '" data-nv="c:' + chKey + '" onclick="event.stopPropagation();toggleNav(\'c:' + chKey + '\')">';
-          html += '<i class="fas fa-chevron-right chev"></i>' + ch.t.split(':')[0] + '</div>';
-          html += '<div class="chsubs chsubs2' + (chExp ? ' exp' : '') + '" id="nv-c:' + chKey + '">';
+          html += '<div class="sb-h sb-h3' + (chExp ? ' op' : '') + '" onclick="toggleSB(this,\'c:' + chKey + '\')">';
+          html += '<i class="fas fa-chevron-down ti"></i>' + ch.t.split(':')[0] + '</div>';
+          html += '<div class="sb-c' + (chExp ? ' op' : '') + '">';
           ch.sec.forEach(function(s) {
             var sOn = S.pg === u.id + ':' + ch.id + ':' + s.id;
-            html += '<div class="ni nichsub' + (sOn ? ' on' : '') + '" onclick="nav(\'' + u.id + ':' + ch.id + ':' + s.id + '\')"><i class="fas fa-file-lines"></i> ' + s.t + '</div>';
+            html += '<div class="ni' + (sOn ? ' on' : '') + '" onclick="nav(\'' + u.id + ':' + ch.id + ':' + s.id + '\')"><i class="fas fa-file-lines"></i> ' + s.t + '</div>';
           });
           html += '</div>';
         });
@@ -329,7 +325,7 @@ function buildSidebar() {
       if (S.imp.length > 0) {
         S.imp.forEach(function(d, i) {
           if (d.unit === u.id) {
-            html += '<div class="ni nichsub' + (S.pg === 'imp-' + i ? ' on' : '') + '" onclick="nav(\'imp-' + i + '\')"><i class="fas fa-file-import"></i> ' + d.title + '</div>';
+            html += '<div class="ni' + (S.pg === 'imp-' + i ? ' on' : '') + '" onclick="nav(\'imp-' + i + '\')"><i class="fas fa-file-import"></i> ' + d.title + '</div>';
           }
         });
       }
@@ -339,7 +335,7 @@ function buildSidebar() {
 
     S.imp.forEach(function(d, i) {
       if (!d.unit || !U.find(function(u) { return u.id === d.unit; })) {
-        html += '<div class="ni nichsub' + (S.pg === 'imp-' + i ? ' on' : '') + '" onclick="nav(\'imp-' + i + '\')"><i class="fas fa-file-import"></i> ' + d.title + '</div>';
+        html += '<div class="ni' + (S.pg === 'imp-' + i ? ' on' : '') + '" onclick="nav(\'imp-' + i + '\')"><i class="fas fa-file-import"></i> ' + d.title + '</div>';
       }
     });
 
@@ -359,12 +355,9 @@ function buildSidebar() {
   nav.innerHTML = html;
 }
 
-function toggleNav(key) {
+function toggleSB(el, key) {
   S.expNav[key] = !S.expNav[key];
-  var el = document.getElementById('nv-' + key);
-  var chev = document.querySelector('[data-nv="' + key + '"]');
-  if (el) el.classList.toggle('exp');
-  if (chev) chev.classList.toggle('exp');
+  tSec(el);
 }
 
 function nav(p) {

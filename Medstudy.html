@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedStudy — Bilingual Medical Lecture Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--bg0:#060a13;--bg1:#0b1120;--bg2:#111827;--bg3:#1a2332;--bg4:#1e293b;--br1:rgba(148,163,184,0.08);--br2:rgba(148,163,184,0.15);--t1:#f1f5f9;--t2:#94a3b8;--t3:#64748b;--ac1:#3b82f6;--ac2:#6366f1;--ac3:#06b6d4;--ac4:#10b981;--ac5:#f59e0b;--ac6:#f43f5e;--ok:#10b981;--okb:rgba(16,185,129,0.12);--er:#ef4444;--erb:rgba(239,68,68,0.12);--r1:8px;--r2:12px;--r3:16px;--r4:20px;--sh:0 4px 24px rgba(0,0,0,0.3);--sg:0 0 30px rgba(59,130,246,0.15);--tr:all .3s cubic-bezier(.4,0,.2,1);--sw:280px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg0);color:var(--t1);height:100vh;overflow:hidden;display:flex}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--t3);border-radius:3px}
+.sidebar{width:var(--sw);min-width:var(--sw);height:100vh;background:var(--bg1);border-right:1px solid var(--br1);display:flex;flex-direction:column;z-index:100}
+.sbrand{padding:20px 18px 14px;border-bottom:1px solid var(--br1)}
+.sbrand h1{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,#0ea5e9,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:10px}
+.sbrand h1 i{-webkit-text-fill-color:#0ea5e9;font-size:1.15rem}
+.sbrand p{font-size:.6rem;color:var(--t3);margin-top:3px;letter-spacing:1.5px;text-transform:uppercase}
+.snav{flex:1;padding:8px 4px;overflow-y:auto}
+.nsec{margin-bottom:4px}
+.nst{font-size:.6rem;text-transform:uppercase;letter-spacing:1.8px;color:var(--t3);padding:10px 14px 4px;font-weight:700;opacity:.7}
+.ni{display:flex;align-items:center;gap:10px;padding:7px 14px;border-radius:var(--r1);cursor:pointer;transition:background .15s,color .15s;color:var(--t2);font-size:.82rem;font-weight:500;position:relative;margin:1px 6px}
+.ni:hover{background:rgba(148,163,184,.08);color:var(--t1)}
+.ni.on{background:rgba(59,130,246,.12);color:var(--ac1)}
+.ni.on::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--ac1);border-radius:0 3px 3px 0}
+.ni i{width:20px;text-align:center;font-size:.85rem;flex-shrink:0}
+.ni .bg{margin-left:auto;background:var(--ac1);color:#fff;font-size:.55rem;padding:2px 7px;border-radius:10px;font-weight:700}
+.nich{display:flex;align-items:center;gap:8px;padding:7px 14px;font-size:.78rem;color:var(--t3);font-weight:600;cursor:pointer;transition:background .15s,color .15s;letter-spacing:.3px;border-radius:var(--r1);margin:1px 6px;user-select:none}
+.nich:hover{background:rgba(148,163,184,.08);color:var(--t2)}
+.nich .chev{font-size:.55rem;transition:transform .2s ease;width:14px;text-align:center;flex-shrink:0;color:var(--t3)}
+.nich.exp .chev{transform:rotate(90deg)}
+.nichunit{padding-left:10px;font-size:.73rem}
+.nichch{padding-left:22px;font-size:.7rem}
+.nichsub{padding-left:36px}
+.nichsub i{font-size:.7rem;opacity:.5}
+.nichsub:hover i{opacity:.8}
+.sfoot{padding:14px 20px;border-top:1px solid var(--br1);font-size:.65rem;color:var(--t3);text-align:center}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.mhdr{height:56px;border-bottom:1px solid var(--br1);display:flex;align-items:center;padding:0 28px;gap:16px;background:var(--bg1);flex-shrink:0}
+.mhdr h2{font-size:1.05rem;font-weight:700;flex:1}
+.hact{display:flex;gap:10px;align-items:center}
+.btn{padding:8px 16px;border-radius:var(--r1);border:none;cursor:pointer;font-size:.8rem;font-weight:600;font-family:inherit;transition:var(--tr);display:inline-flex;align-items:center;gap:8px}
+.bp{background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;box-shadow:0 2px 12px rgba(59,130,246,.3)}
+.bp:hover{box-shadow:0 4px 20px rgba(59,130,246,.5);transform:translateY(-1px)}
+.bs{background:var(--bg3);color:var(--t1);border:1px solid var(--r2)}
+.bs:hover{background:var(--bg4);border-color:var(--ac1)}
+.bs2{background:var(--ok);color:#fff}
+.sm{padding:6px 12px;font-size:.72rem}
+.ic{width:34px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:var(--r1)}
+.mcon{flex:1;overflow-y:auto;padding:28px;min-height:0}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:28px}
+.sc{background:var(--bg2);border:1px solid var(--br1);border-radius:var(--r3);padding:22px;transition:var(--tr);position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.sc:nth-child(1)::before{background:var(--ac1)}.sc:nth-child(2)::before{background:var(--ac4)}.sc:nth-child(3)::before{background:var(--ac3)}.sc:nth-child(4)::before{background:var(--ac5)}
+.sc:hover{transform:translateY(-2px);box-shadow:var(--sg)}
+.si{width:44px;height:44px;border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:14px}
+.sc:nth-child(1) .si{background:rgba(59,130,246,.12);color:var(--ac1)}.sc:nth-child(2) .si{background:rgba(16,185,129,.12);color:var(--ac4)}.sc:nth-child(3) .si{background:rgba(6,182,212,.12);color:var(--ac3)}.sc:nth-child(4) .si{background:rgba(245,158,11,.12);color:var(--ac5)}
+.sv{font-size:1.9rem;font-weight:800;margin-bottom:2px}.sl{font-size:.75rem;color:var(--t2)}
+.ugrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:22px}
+.uc{background:var(--bg2);border:1px solid var(--br1);border-radius:var(--r3);overflow:hidden;transition:var(--tr);cursor:pointer}
+.uc:hover{transform:translateY(-3px);box-shadow:var(--sg);border-color:var(--ac1)}
+.uch{padding:22px;border-bottom:1px solid var(--br1)}
+.uch .un{font-size:.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--ac1);font-weight:700;margin-bottom:6px}
+.uch h3{font-size:1rem;font-weight:700;line-height:1.4}
+.uch .vi{display:block;font-size:.82rem;color:var(--t2);margin-top:4px;font-weight:500}
+.ucb{padding:14px 22px}
+.clist{list-style:none}.clist li{padding:5px 0;font-size:.8rem;color:var(--t2);display:flex;gap:8px}.clist li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--ac1);margin-top:6px;flex-shrink:0}
+.ucf{padding:10px 22px 18px;display:flex;gap:8px}
+.lc{max-width:880px;margin:0 auto}
+.lnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.sb{background:var(--bg2);border:1px solid var(--br1);border-radius:var(--r3);margin-bottom:20px;overflow:hidden}
+.sh{padding:18px 24px;border-bottom:1px solid var(--br1);display:flex;align-items:center;gap:12px;cursor:pointer;transition:var(--tr)}
+.sh:hover{background:var(--bg4)}.sh h3{font-size:.95rem;font-weight:700;flex:1}
+.sh .ti{transition:var(--tr);color:var(--t3)}.sh.op .ti{transform:rotate(180deg)}
+.sb2{padding:22px 24px;display:none}.sb2.op{display:block}
+.cen{margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--br1)}
+.cen:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.cl{font-size:.65rem;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:10px;display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:4px}
+.cl.en{background:rgba(59,130,246,.12);color:var(--ac1)}.cl.vi{background:rgba(16,185,129,.12);color:var(--ac4)}
+.ct{font-size:.9rem;line-height:1.8;color:var(--t2)}.ct strong{color:var(--t1);font-weight:600}.ct em{color:var(--ac3);font-style:italic}
+.kt{display:inline;background:rgba(99,102,241,.12);color:var(--ac2);padding:1px 6px;border-radius:4px;font-weight:600;font-size:.86rem}
+.fb{background:var(--bg3);border:1px solid var(--br2);border-radius:var(--r2);padding:14px 20px;margin:14px 0;text-align:center;font-size:1rem;font-family:monospace;color:var(--ac3)}
+.cbx{background:linear-gradient(135deg,rgba(244,63,94,.08),rgba(99,102,241,.08));border:1px solid rgba(244,63,94,.2);border-radius:var(--r2);padding:18px 22px;margin:14px 0}
+.cbx h4{font-size:.78rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--ac6);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.cbx p{font-size:.85rem;color:var(--t2);line-height:1.7}
+.sbx{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(6,182,212,.08));border:1px solid rgba(16,185,129,.2);border-radius:var(--r2);padding:18px 22px;margin:14px 0}
+.sbx h4{font-size:.78rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--ac4);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.sbx p{font-size:.85rem;color:var(--t2);line-height:1.7}
+.qc{max-width:780px;margin:0 auto}.qhdr{text-align:center;margin-bottom:28px}.qhdr h2{font-size:1.4rem;font-weight:800;margin-bottom:6px}.qhdr p{color:var(--t2);font-size:.88rem}
+.qf{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+.qf select{background:var(--bg2);border:1px solid var(--r2);color:var(--t1);padding:8px 14px;border-radius:var(--r1);font-family:inherit;font-size:.82rem}
+.qcard{background:var(--bg2);border:1px solid var(--br1);border-radius:var(--r3);padding:26px;margin-bottom:18px;transition:var(--tr)}
+.qcard:hover{border-color:var(--br2)}
+.qn{font-size:.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--ac1);font-weight:700;margin-bottom:8px}
+.qt{font-size:.92rem;font-weight:600;margin-bottom:18px;line-height:1.6}.qt .vi{display:block;color:var(--t2);font-weight:400;margin-top:6px;font-size:.85rem}
+.ol{list-style:none;display:flex;flex-direction:column;gap:8px}
+.oi{padding:12px 16px;border:1px solid var(--br2);border-radius:var(--r2);cursor:pointer;transition:var(--tr);display:flex;align-items:flex-start;gap:12px;font-size:.85rem}
+.oi:hover{background:var(--bg4);border-color:var(--ac1)}
+.oi.sel{background:rgba(59,130,246,.12);border-color:var(--ac1);color:var(--ac1)}
+.oi.cor{background:rgba(16,185,129,.12);border-color:var(--ac4);color:var(--ac4)}
+.oi.wrg{background:rgba(239,68,68,.12);border-color:var(--er);color:var(--er)}
+.ol2{width:26px;height:26px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;flex-shrink:0}
+.otp{flex:1;line-height:1.5}.otp .vi{display:block;color:var(--t3);font-size:.8rem;margin-top:2px}
+.exp{margin-top:14px;padding:14px 18px;background:var(--bg3);border-radius:var(--r2);border-left:3px solid var(--ac4);display:none}
+.exp.sh{display:block}.exp h4{font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--ac4);margin-bottom:6px}.exp p{font-size:.82rem;color:var(--t2);line-height:1.7}
+.qsc{text-align:center;padding:28px;background:var(--bg2);border:1px solid var(--br1);border-radius:var(--r3);margin-bottom:22px}
+.qsc .sv2{font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,#0ea5e9,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.qsc .sl2{font-size:.88rem;color:var(--t2);margin-top:4px}
+.imp{max-width:680px;margin:0 auto}
+.drop{border:2px dashed var(--r2);border-radius:var(--r3);padding:50px 36px;text-align:center;transition:var(--tr);cursor:pointer;background:var(--bg2)}
+.drop:hover,.drop.dov{border-color:var(--ac1);background:rgba(59,130,246,.05)}
+.drop i{font-size:2.5rem;color:var(--t3);margin-bottom:14px}
+.drop h3{font-size:1.05rem;font-weight:700;margin-bottom:6px}.drop p{color:var(--t2);font-size:.82rem}
+.fm{margin-top:24px}.fg{margin-bottom:18px}.fg label{display:block;font-size:.8rem;font-weight:600;margin-bottom:6px;color:var(--t2)}
+.fg input,.fg textarea,.fg select{width:100%;background:var(--bg2);border:1px solid var(--r2);color:var(--t1);padding:10px 14px;border-radius:var(--r2);font-family:inherit;font-size:.85rem;transition:var(--tr)}
+.fg input:focus,.fg textarea:focus,.fg select:focus{outline:none;border-color:var(--ac1);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.fg textarea{min-height:160px;resize:vertical}
+.il{margin-top:24px}
+.ii{background:var(--bg2);border:1px solid var(--br1);border-radius:var(--r2);padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:14px;transition:var(--tr)}
+.ii:hover{border-color:var(--br2)}
+.ii .iic{width:40px;height:40px;border-radius:var(--r1);background:rgba(59,130,246,.12);display:flex;align-items:center;justify-content:center;color:var(--ac1);font-size:1rem;flex-shrink:0}
+.ii .iii{flex:1}.ii .iii h4{font-size:.88rem;font-weight:600}.ii .iii p{font-size:.72rem;color:var(--t3);margin-top:2px}
+.gc{max-width:680px;margin:0 auto}
+.gf{background:var(--bg2);border:1px solid var(--br1);border-radius:var(--r3);padding:28px}
+.glo{text-align:center;padding:36px;color:var(--t3)}.glo i{font-size:2rem;animation:sp 1s linear infinite;margin-bottom:10px;display:block}
+@keyframes sp{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.fc{max-width:580px;margin:0 auto;text-align:center}
+.fw{perspective:1000px;margin-bottom:28px}
+.flc{width:100%;min-height:300px;position:relative;transition:transform .6s;transform-style:preserve-3d;cursor:pointer;border-radius:var(--r3)}
+.flc.flp{transform:rotateY(180deg)}
+.ff{position:absolute;width:100%;min-height:300px;backface-visibility:hidden;border-radius:var(--r3);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;border:1px solid var(--br1)}
+.ffr{background:linear-gradient(135deg,var(--bg2),var(--bg3))}
+.ffbk{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(6,182,212,.1));transform:rotateY(180deg);border-color:rgba(16,185,129,.3)}
+.fctrl{display:flex;gap:12px;justify-content:center}
+.fcnt{font-size:.82rem;color:var(--t3);margin-bottom:18px}
+@media(max-width:768px){.sidebar{position:fixed;left:-100%;z-index:200}.sidebar.open{left:0}.mcon{padding:18px}.sgrid{grid-template-columns:1fr}.ugrid{grid-template-columns:1fr}}
+.hidden{display:none!important}.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:600}
+.tagb{background:rgba(59,130,246,.12);color:var(--ac1)}.tagg{background:rgba(16,185,129,.12);color:var(--ac4)}.taga{background:rgba(245,158,11,.12);color:var(--ac5)}
+.tab{display:flex;gap:4px;background:var(--bg2);border-radius:var(--r2);padding:4px;margin-bottom:22px;border:1px solid var(--br1)}
+.tab button{flex:1;padding:9px 14px;border-radius:var(--r1);border:none;background:transparent;color:var(--t2);font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--tr)}
+.tab button.on{background:var(--ac1);color:#fff}
+.tab button:hover:not(.on){background:var(--bg4)}
+.chsubs{display:none}
+.chsubs.exp{display:block}
+.chsubs2{padding-left:10px}
+.apikey-row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.apikey-row input{flex:1}
+.apikey-row .btn-del{background:var(--er);color:#fff;border:none;border-radius:var(--r1);width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:var(--tr);flex-shrink:0}
+.apikey-row .btn-del:hover{opacity:.8}
+.addkey-btn{background:var(--bg3);border:1px dashed var(--br2);border-radius:var(--r2);padding:10px 16px;color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:600;transition:var(--tr);width:100%;justify-content:center;margin-bottom:16px}
+.addkey-btn:hover{border-color:var(--ac1);color:var(--ac1);background:rgba(59,130,246,.05)}
+.gen-status{padding:12px 16px;border-radius:var(--r2);margin-bottom:14px;font-size:.82rem;display:none}
+.gen-status.ok{display:block;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--ac4)}
+.gen-status.err{display:block;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--er)}
+.gen-status.warn{display:block;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--ac5)}
+.prog{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin:10px 0}
+.prog .bar{height:100%;background:linear-gradient(90deg,var(--ac1),var(--ac2));border-radius:2px;transition:width .3s;width:0%}
+.ta-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;border:none;cursor:pointer;font-size:1.4rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(59,130,246,.4);z-index:999;transition:var(--tr)}
+.ta-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(59,130,246,.6)}
+.ta-panel{position:fixed;bottom:92px;right:24px;width:400px;max-height:600px;background:var(--bg1);border:1px solid var(--br2);border-radius:var(--r3);display:none;flex-direction:column;z-index:998;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.ta-panel.open{display:flex}
+.ta-header{padding:16px 20px;border-bottom:1px solid var(--br1);display:flex;align-items:center;gap:12px;background:var(--bg2)}
+.ta-header .ta-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff;flex-shrink:0}
+.ta-header .ta-info{flex:1}.ta-header .ta-info h4{font-size:.88rem;font-weight:700}.ta-header .ta-info p{font-size:.68rem;color:var(--t3)}
+.ta-header .ta-close{background:none;border:none;color:var(--t3);cursor:pointer;font-size:1rem;padding:4px;transition:var(--tr)}
+.ta-header .ta-close:hover{color:var(--t1)}
+.ta-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:300px;max-height:400px}
+.ta-msg{max-width:85%;padding:10px 14px;border-radius:var(--r2);font-size:.82rem;line-height:1.6}
+.ta-msg.user{align-self:flex-end;background:rgba(59,130,246,.15);color:var(--t1);border:1px solid rgba(59,130,246,.2)}
+.ta-msg.bot{align-self:flex-start;background:var(--bg3);color:var(--t2);border:1px solid var(--br1)}
+.ta-msg.bot strong{color:var(--t1)}.ta-msg.bot em{color:var(--ac3)}
+.ta-msg.bot .kt{display:inline;background:rgba(99,102,241,.12);color:var(--ac2);padding:1px 4px;border-radius:3px;font-weight:600;font-size:.8rem}
+.ta-msg.bot .fb{background:var(--bg4);border:1px solid var(--br2);border-radius:6px;padding:8px 12px;margin:8px 0;text-align:center;font-family:monospace;font-size:.82rem;color:var(--ac3)}
+.ta-typing{display:flex;gap:4px;padding:10px 14px;background:var(--bg3);border:1px solid var(--br1);border-radius:var(--r2);align-self:flex-start;max-width:60px}
+.ta-typing span{width:6px;height:6px;border-radius:50%;background:var(--t3);animation:taDot 1.4s infinite}
+.ta-typing span:nth-child(2){animation-delay:.2s}
+.ta-typing span:nth-child(3){animation-delay:.4s}
+@keyframes taDot{0%,80%,100%{opacity:.3}40%{opacity:1}}
+.ta-input{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--br1);background:var(--bg2)}
+.ta-input input{flex:1;background:var(--bg3);border:1px solid var(--br2);color:var(--t1);padding:10px 14px;border-radius:var(--r1);font-family:inherit;font-size:.82rem;transition:var(--tr)}
+.ta-input input:focus{outline:none;border-color:var(--ac1)}
+.ta-input button{background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;border:none;border-radius:var(--r1);width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:var(--tr);flex-shrink:0}
+.ta-input button:hover{opacity:.9}
+.ta-input button:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:500px){.ta-panel{right:8px;left:8px;width:auto;bottom:80px}}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+<div class="sbrand"><h1><i class="fas fa-stethoscope"></i> MedStudy</h1><p>Bilingual Medical Lectures</p></div>
+<nav class="snav" id="snav"></nav>
+<div class="sfoot">MedStudy — Medical Year 1<br>Bilingual Lecture Platform v3.0</div>
+</aside>
+
+<div class="main">
+<header class="mhdr">
+<h2 id="ptitle">Dashboard</h2>
+<div class="hact">
+<button class="btn bs sm" onclick="toggleTA()" title="Teaching Assistant"><i class="fas fa-graduation-cap"></i> Ask TA</button>
+<button class="btn bs sm" onclick="nav('import')"><i class="fas fa-plus"></i> Import</button>
+<button class="btn bp sm" onclick="nav('gen')"><i class="fas fa-robot"></i> Generate</button>
+</div>
+</header>
+<div class="mcon" id="mcon"></div>
+</div>
+
+<script>
+var S = { pg: 'dashboard', imp: [], fi: 0, ff: false, keys: JSON.parse(localStorage.getItem('cb_apikeys') || '[]'), activeKey: localStorage.getItem('cb_activekey') || '', expNav: {} };
+
+var BOOKS = [
+  { id: 'campbell', name: 'Campbell Biology', icon: 'fas fa-dna' }
+];
+
+var U = [
+  { id: 'unit-1', n: 'Unit 1', t: 'The Role of Chemistry in Biology', tv: 'Vai trò của Hóa học trong Sinh học', ic: 'fas fa-flask', ch: [
+    { id: 'ch-intro', t: 'Interview with Kenneth Olden', tv: 'Phỏng vấn Kenneth Olden', sec: [
+      { id: 'intro', t: 'Introduction: Kenneth Olden Interview', tv: 'Giới thiệu: Phỏng vấn Kenneth Olden',
+        en: '<p><strong>Dr. Kenneth Olden</strong> had a distinguished career in medical research and public health, serving as Director of the National Institute of Environmental Health Sciences (1991-2005) and founding Dean of the School of Public Health at CUNY (2008-2012).</p><p>His research focused on <span class="kt">fibronectin</span>, a glycoprotein on normal cells but absent on cancer cells. He demonstrated that <strong>carbohydrates were not necessary for protein export</strong> but were important for stabilizing protein structure — a landmark 1978 paper.</p><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Clinical Relevance</h4><p>Understanding the chemistry of biological molecules is foundational to medical research. Dr. Olden\'s work on glycoproteins informs cancer biology and drug development.</p></div>',
+        vi: '<p><strong>Tiến sĩ Kenneth Olden</strong> có sự nghiệp xuất sắc trong nghiên cứu y tế và sức khỏe cộng đồng, giữ chức vụ Viện trưởng Viện Sức khỏe Môi trường Quốc gia (1991-2005) và là Trưởng khoa Sáng lập Trường Y tế Công cộng tại CUNY (2008-2012).</p><p>Nghiên cứu của ông tập trung vào <span class="kt">fibronectin</span>, một glycoprotein trên bề mặt tế bào bình thường nhưng vắng mặt trên tế bào ung thư. Ông chứng minh rằng <strong>carbonhydrate không cần thiết cho vận chuyển protein</strong> nhưng quan trọng trong ổn định cấu trúc protein.</p><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Ý nghĩa Lâm sàng</h4><p>Hiểu biết về hóa học của các phân tử sinh học là nền tảng cho nghiên cứu y khoa. Công việc của Tiến sĩ Olden về glycoprotein có ý nghĩa trực tiếp trong sinh học ung thư và phát triển thuốc.</p></div>' }
+    ]},
+    { id: 'ch2', t: 'Chapter 2: Atoms and Molecules', tv: 'Chương 2: Nguyên tử và Phân tử', sec: [
+      { id: 'elements', t: 'Elements and Compounds', tv: 'Nguyên tố và Hợp chất',
+        en: '<p><strong>Matter</strong> is anything that takes up space and has mass. <span class="kt">Elements</span> cannot be broken down by chemical reactions. There are 92 naturally occurring elements.</p><p>A <span class="kt">compound</span> consists of two or more elements in a fixed ratio. Table salt (NaCl) combines sodium (reactive metal) and chlorine (poisonous gas) into an edible compound.</p><p><strong>Four elements make up ~96% of living matter:</strong></p><div class="fb">O (65.0%) | C (18.5%) | H (9.5%) | N (3.3%)</div><p><span class="kt">Trace elements</span> like iodine (I) are needed in minute quantities — deficiency causes <em>goiter</em>.</p><div class="sbx"><h4><i class="fas fa-lightbulb"></i> Key Concept</h4><p>A compound has emergent properties different from its constituent elements — a fundamental principle in biology.</p></div>',
+        vi: '<p><strong>Chất liệu</strong> là bất kỳ thứ gì chiếm không gian và có khối lượng. <span class="kt">Nguyên tố</span> không thể phân hủy bằng phản ứng hóa học. Có 92 nguyên tố tự nhiên.</p><p>Một <span class="kt">hợp chất</span> bao gồm hai hoặc nhiều nguyên tố theo tỷ lệ cố định. Muối ăn (NaCl) kết hợp natri (kim loại phản ứng mạnh) và clo (khí độc) thành hợp chất ăn được.</p><p><strong>Bốn nguyên tố chiếm khoảng 96% vật chất sống:</strong></p><div class="fb">O (65,0%) | C (18,5%) | H (9,5%) | N (3,3%)</div><p><span class="kt">Vi lượng nguyên tố</span> như iốt (I) cần số lượng rất nhỏ — thiếu hụt gây <em>bướu cổ</em>.</p><div class="sbx"><h4><i class="fas fa-lightbulb"></i> Khái niệm Trọng tâm</h4><p>Một hợp chất có tính chất nổi bật khác với các nguyên tố cấu thành — nguyên tắc cơ bản trong sinh học.</p></div>' },
+      { id: 'atoms', t: 'Atomic Structure: Subatomic Particles', tv: 'Cấu trúc Nguyên tử: Các hạt cơ bản',
+        en: '<p>An <span class="kt">atom</span> is the smallest unit of matter retaining element properties. Three <strong>subatomic particles</strong>:</p><div class="fb">Protons (+) | Neutrons (0) | Electrons (−)</div><p><strong>Protons + neutrons</strong> are in the <span class="kt">atomic nucleus</span>. <strong>Electrons</strong> form a negative charge cloud.</p><p><strong>Atomic Number (Z)</strong> = protons = element identity<br><strong>Mass Number (A)</strong> = protons + neutrons<br><strong>Neutrons</strong> = A − Z</p><div class="fb">²³₁₁Na → 11 protons, 12 neutrons, 11 electrons</div>',
+        vi: '<p>Một <span class="kt">nguyên tử</span> là đơn vị nhỏ nhất giữ được tính chất nguyên tố. Ba <strong>hạt cơ bản</strong>:</p><div class="fb">Proton (+) | Trung tử (0) | Electron (−)</div><p><strong>Proton + trung tử</strong> nằm trong <span class="kt">hạt nhân nguyên tử</span>. <strong>Electron</strong> tạo đám mây điện âm.</p><p><strong>Số nguyên tử (Z)</strong> = proton = danh tính nguyên tố<br><strong>Số khối (A)</strong> = proton + trung tử<br><strong>Trung tử</strong> = A − Z</p><div class="fb">²³₁₁Na → 11 proton, 12 trung tử, 11 electron</div>' },
+      { id: 'isotopes', t: 'Isotopes and Radioactive Decay', tv: 'Đồng vị và Phóng xạ',
+        en: '<p><span class="kt">Isotopes</span>: same protons, different neutrons. Carbon: ¹²C (99%), ¹³C (1%), ¹⁴C (trace, radioactive).</p><p>A <span class="kt">radioactive isotope</span> decays spontaneously. <strong>Medical uses:</strong> radioactive tracers (PET scans), radiometric dating (¹⁴C half-life = 5,730 years).</p><div class="cbx"><h4><i class="fas fa-heartbeat"></i> PET Scans</h4><p>PET uses radioactively labeled glucose to detect high metabolic activity — a hallmark of cancerous tissue. Essential in oncology.</p></div>',
+        vi: '<p><span class="kt">Đồng vị</span>: cùng proton, khác trung tử. Carbon: ¹²C (99%), ¹³C (1%), ¹⁴C (vô cùng nhỏ, phóng xạ).</p><p><span class="kt">Đồng vị phóng xạ</span> phân rã tự nhiên. <strong>Ứng dụng y tế:</strong> chất đánh dấu phóng xạ (scan PET), phân tích phóng xạ (¹⁴C bán rã = 5.730 năm).</p><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Scan PET</h4><p>PET sử dụng glucose đánh nhãn phóng xạ để phát hiện hoạt động chuyển hóa cao — đặc trưng của mô ung thư. Thiết yếu trong ung thư học.</p></div>' },
+      { id: 'bonds', t: 'Chemical Bonding: Covalent and Ionic', tv: 'Liên kết Hóa học: Cung hóa trị và Ion',
+        en: '<p><strong>Covalent bonds</strong> share electron pairs: single (H—H), double (O=O). <span class="kt">Nonpolar</span>: equal sharing. <span class="kt">Polar</span>: unequal — e.g., H₂O (δ⁻ on O, δ⁺ on H).</p><p><strong>Valence</strong> = bonding capacity: H=1, O=2, N=3, C=4.</p><p><strong>Ionic bonds</strong> transfer electrons: <span class="kt">Na⁺</span> (cation, +) and <span class="kt">Cl⁻</span> (anion, −) attract.</p><div class="fb">Na → Na⁺ + Cl⁻ → NaCl</div><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Medical Relevance</h4><p>Electrolyte balance (Na⁺, K⁺, Ca²⁺, Cl⁻) is critical for cardiac function, nerve impulses, and muscle contraction. Many drugs are manufactured as salts.</p></div>',
+        vi: '<p><strong>Liên kết cộng hóa trị</strong> chia sẻ cặp electron: đơn (H—H), đôi (O=O). <span class="kt">Không cực</span>: chia sẻ đều. <span class="kt">Có cực</span>: không đều — ví dụ H₂O (δ⁻ trên O, δ⁺ trên H).</p><p><strong>Trí</strong> = khả năng liên kết: H=1, O=2, N=3, C=4.</p><p><strong>Liên kết ion</strong> truyền electron: <span class="kt">Na⁺</span> (dương ion) và <span class="kt">Cl⁻</span> (âm ion) hút nhau.</p><div class="fb">Na → Na⁺ + Cl⁻ → NaCl</div><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Ý nghĩa Y khoa</h4><p>Cân bằng điện giải (Na⁺, K⁺, Ca²⁺, Cl⁻) rất quan trọng cho chức năng tim, xung thần kinh và cơ co. Nhiều thuốc sản xuất dạng muối.</p></div>' },
+      { id: 'weak', t: 'Weak Interactions and Molecular Shape', tv: 'Tương tác Yếu và Hình dạng Phân tử',
+        en: '<p><span class="kt">Hydrogen bonds</span>: attraction between partially positive H and nearby electronegative atom. ~1/20 strength of covalent bonds but collectively powerful.</p><p><span class="kt">Van der Waals</span>: temporary attractions between transiently charged regions.</p><p><strong>Molecular shape determines function:</strong> morphine mimics endorphins by having similar shape to bind endorphin receptors — <em>molecular mimicry</em>.</p><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Pharmacology</h4><p>Drug design relies on molecular shape complementarity. This is core to pharmacology and toxicology.</p></div>',
+        vi: '<p><span class="kt">Liên kết hydro</span>: hút giữa H mang điện tích từng phần và nguyên tử điện âm gần đó. ~1/20 sức mạnh liên kết cộng hóa trị nhưng tổng hợp mạnh.</p><p><span class="kt">Van der Waals</span>: tương tác tạm thời giữa vùng điện tích nhất thời.</p><p><strong>Hình dạng phân tử quyết định chức năng:</strong> morfine bắt chước endorphin vì có hình dạng tương tự — <em>bắt chước phân tử</em>.</p><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Dược lý</h4><p>Thiết kế thuốc dựa trên tương thích hình dạng phân tử. Đây là cốt lõi của dược lý và độc lý học.</p></div>' },
+      { id: 'reactions', t: 'Chemical Reactions and Equilibrium', tv: 'Phản ứng Hóa học và Cân bằng',
+        en: '<p><span class="kt">Chemical reactions</span> make/break bonds while conserving matter.</p><div class="fb">6CO₂ + 6H₂O + Sunlight → C₆H₁₂O₆ + 6O₂</div><p><span class="kt">Chemical equilibrium</span>: forward and reverse rates equal — dynamic state, concentrations stable.</p><div class="sbx"><h4><i class="fas fa-lightbulb"></i> Core Principle</h4><p>Matter is conserved — atoms rearranged, never created or destroyed.</p></div>',
+        vi: '<p><span class="kt">Phản ứng hóa học</span> tạo/phá liên kết trong khi bảo toàn vật chất.</p><div class="fb">6CO₂ + 6H₂O + Ánh sáng → C₆H₁₂O₆ + 6O₂</div><p><span class="kt">Cân bằng hóa học</span>: tốc độ thuận và nghịch bằng nhau — trạng thái động, nồng độ ổn định.</p><div class="sbx"><h4><i class="fas fa-lightbulb"></i> Nguyên tắc Cốt lõi</h4><p>Vật chất được bảo toàn — nguyên tử sắp xếp lại, không bao giờ tạo ra hay phá hủy.</p></div>' }
+    ]},
+    { id: 'ch3', t: 'Chapter 3: The Chemistry of Water', tv: 'Chương 3: Hóa học của Nước', sec: [
+      { id: 'wstruct', t: 'Water Structure and Hydrogen Bonding', tv: 'Cấu trúc Nước và Liên kết Hydro',
+        en: '<p>Water (H₂O) is a <span class="kt">polar molecule</span> with V-shape. Oxygen more electronegative:</p><div class="fb">δ⁻ on Oxygen | δ⁺ on Hydrogens</div><p>Each water molecule can hydrogen-bond to several others, creating a dynamic network giving water extraordinary properties.</p><div class="sbx"><h4><i class="fas fa-lightbulb"></i> Key Point</h4><p>Hydrogen bonds are individually weak but collectively give water all life-supporting properties.</p></div>',
+        vi: '<p>Nước (H₂O) là <span class="kt">phân tử cực</span> hình chữ V. Oxy điện âm hơn:</p><div class="fb">δ⁻ trên Oxy | δ⁺ trên Hydro</div><p>Mỗi phân tử nước liên kết hydro với nhiều phân tử khác, tạo mạng lưới động giữ nước có tính chất phi thường.</p><div class="sbx"><h4><i class="fas fa-lightbulb"></i> Điểm Trọng tâm</h4><p>Liên kết hydro đơn lẻ yếu nhưng tổng hợp lại mang lại cho nước tất cả tính chất hỗ trợ sự sống.</p></div>' },
+      { id: 'cohesion', t: 'Cohesion, Surface Tension, and Adhesion', tv: 'Sự kết dính, Sức căng bề mặt, và Bám dính',
+        en: '<p><span class="kt">Cohesion</span>: water molecules stay close due to hydrogen bonding. <span class="kt">Surface tension</span>: high surface tension allows insects to walk on water.</p><p><strong>Adhesion</strong>: water clinging to cell walls via hydrogen bonds. Together with cohesion, enables <em>transpiration pull</em> — water transport in plants up to 100m+ tall.</p><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Clinical Significance</h4><p>Cohesion and adhesion are essential for capillary action in blood vessels and lymphatic drainage.</p></div>',
+        vi: '<p><span class="kt">Sự kết dính</span>: phân tử nước ở gần nhau nhờ liên kết hydro. <span class="kt">Sức căng bề mặt</span>: cao cho phép con trùng đi trên nước.</p><p><strong>Sự bám dính</strong>: nước bám vào thành tế bào qua liên kết hydro. Kết hợp với kết dính, cho phép <em>kéo bay hơi</em> — vận chuyển nước trong thực vật cao hơn 100m.</p><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Ý nghĩa Lâm sàng</h4><p>Sự kết dính và bám dính rất quan trọng cho mao mạch trong mạch máu và dẫn lưu bạch huyết.</p></div>' },
+      { id: 'temp', t: 'Specific Heat and Evaporative Cooling', tv: 'Nhiệt độ riêng và Làm mát Bay hơi',
+        en: '<p><span class="kt">Specific heat</span> = 1 cal/(g·°C). Heat breaks hydrogen bonds first → water resists temperature change.</p><p><strong>Biological importance:</strong> oceans store huge heat, moderate climate, stabilize temperatures.</p><p><span class="kt">Evaporative cooling</span>: high heat of vaporization (580 cal/g) → sweating cools body, plants cool leaves.</p>',
+        vi: '<p><span class="kt">Nhiệt độ riêng</span> = 1 cal/(g·°C). Nhiệt phá liên kết hydro trước → nước chống thay đổi nhiệt độ.</p><p><strong>Ý nghĩa Sinh học:</strong> đại dương lưu trữ nhiệt lớn, điều hòa khí hậu, ổn định nhiệt độ.</p><p><span class="kt">Làm mát bay hơi</span>: nhiệt hóa hơi cao (580 cal/g) → đổ mồ hôi làm mát cơ thể, thực vật làm mát lá.</p>' },
+      { id: 'ice', t: 'Ice Floating and Density Anomaly', tv: 'Băng nổi và Bất thường Khối lượng riêng',
+        en: '<p>Ice is ~10% <em>less dense</em> than liquid water — hydrogen bonds lock molecules farther apart in crystalline lattice.</p><p><strong>Significance:</strong> floating ice insulates water below, allowing aquatic survival in winter. If ice sank, oceans could freeze solid.</p><div class="cbx"><h4><i class="fas fa-exclamation-triangle"></i> Climate Change</h4><p>Arctic temperatures rose 2.2°C since 1961. Sea ice melting threatens polar bears, walruses, and entire Arctic ecosystem.</p></div>',
+        vi: '<p>Băng <em>ít đặc hơn</em> nước lỏng khoảng 10% — liên kết hydro khóa phân tử cách xa hơn trong mạng tinh thể.</p><p><strong>Ý nghĩa:</strong> băng nổi cách nhiệt cho nước bên dưới, cho phép sinh vật nước sống qua mùa đông.</p><div class="cbx"><h4><i class="fas fa-exclamation-triangle"></i> Biến đổi Khí hậu</h4><p>Nhiệt độ Bắc Cực tăng 2,2°C từ 1961. Băng tan đe dọa gấu trắng, hải mã và toàn bộ hệ sinh thái.</p></div>' },
+      { id: 'solvent', t: 'Water as the Universal Solvent', tv: 'Nước như Chất tan Phổ quát',
+        en: '<p>Water dissolves ionic and polar substances via polarity. Each ion gets a <span class="kt">hydration shell</span>.</p><p><strong>Hydrophilic</strong> = water-loving (ions, polar). <strong>Hydrophobic</strong> = water-fearing (nonpolar, oils).</p><p><strong>Molarity (M)</strong> = mol/L. One mole = 6.02 × 10²³ molecules.</p><div class="fb">1M sucrose = 342g in 1L solution</div>',
+        vi: '<p>Nước tan chất ion và cực nhờ tính polar. Mỗi ion có <span class="kt">vỏ hydrat</span>.</p><p><strong>Thân nước</strong> = yêu nước (ion, cực). <strong>Thiếu nước</strong> = ghét nước (không cực, dầu).</p><p><strong>Mô-lai (M)</strong> = mol/L. Một mol = 6,02 × 10²³ phân tử.</p><div class="fb">1M sucrose = 342g trong 1L dung dịch</div>' },
+      { id: 'acid', t: 'Acids, Bases, pH, and Buffers', tv: 'Axit, Bazơ, pH và Đệm',
+        en: '<p><strong>Acids</strong> donate H⁺. <strong>Bases</strong> accept H⁺.</p><div class="fb">pH = −log[H⁺] | Neutral = 7 | Acidic < 7 | Basic > 7</div><p>Each pH unit = 10-fold [H⁺] change. pH 3 is 1,000× more acidic than pH 6.</p><p><span class="kt">Buffers</span>: H₂CO₃ ⇌ HCO₃⁻ + H⁺ maintains blood pH ~7.4.</p><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Critical Knowledge</h4><p>Blood pH 7.35-7.45. Acidosis or alkalosis can be life-threatening. <strong>Ocean acidification</strong> from CO₂ threatens marine calcifiers.</p></div>',
+        vi: '<p><strong>Axit</strong> cho H⁺. <strong>Bazơ</strong> nhận H⁺.</p><div class="fb">pH = −log[H⁺] | Trung tính = 7 | Axit < 7 | Bazơ > 7</div><p>Mỗi đơn vị pH = thay đổi 10 lần [H⁺]. pH 3 axit hơn pH 6 gấp 1.000 lần.</p><p><span class="kt">Đệm</span>: H₂CO₃ ⇌ HCO₃⁻ + H⁺ duy trì pH máu ~7,4.</p><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Kiến thức Trọng yếu</h4><p>pH máu 7,35-7,45. Nhiệm toan hoặc nhiệm kiềm có thể đe dọa tính mạng. <strong>Đại dương axit hóa</strong> từ CO₂ đe dọa sinh vật tạo vỏ.</p></div>' }
+    ]},
+    { id: 'ch4', t: 'Chapter 4: Carbon: The Basis of Molecular Diversity', tv: 'Chương 4: Cacbon: Nền tảng Đa dạng Phân tử', sec: [
+      { id: 'org', t: 'Organic Chemistry and Origin of Life', tv: 'Hóa học Hữu cơ và Nguồn gốc Sự sống',
+        en: '<p><span class="kt">Organic chemistry</span> studies carbon compounds. Carbon forms 4 bonds — uniquely versatile.</p><p><strong>Miller\'s Experiment (1953):</strong> Simulated early Earth → produced amino acids, supporting abiotic synthesis hypothesis.</p><p>2018: NASA found carbon compounds on Mars — potentially relics of past life.</p><div class="sbx"><h4><i class="fas fa-lightbulb"></i> Evolution</h4><p>Uniform C, H, O, N, S, P across organisms reflects common origin. Carbon\'s versatility enables life\'s diversity.</p></div>',
+        vi: '<p><span class="kt">Hóa học hữu cơ</span> nghiên cứu hợp chất carbon. Cacbon tạo 4 liên kết — đa năng độc đáo.</p><p><strong>Thí nghiệm Miller (1953):</strong> Mô phỏng Trái đất sơ khai → tạo axit amin, ủng hộ giả thuyết tổng hợp vô sinh.</p><p>2018: NASA phát hiện hợp chất carbon trên sao Hỏa — có thể là di vật sự sống quá khứ.</p><div class="sbx"><h4><i class="fas fa-lightbulb"></i> Tiến hóa</h4><p>Tỷ lệ C, H, O, N, S, P đồng đều phản ánh nguồn gốc chung. Tính đa năng của carbon cho phép đa dạng sự sống.</p></div>' },
+      { id: 'cbond', t: 'Carbon Bonding and Isomers', tv: 'Liên kết Cacbon và Đồng phân',
+        en: '<p>Carbon forms chains, rings, hydrocarbons. <span class="kt">Isomers</span>: same formula, different structure/properties.</p><ul><li><strong>Structural</strong>: different bonding</li><li><strong>Cis-trans</strong>: different spatial arrangement</li><li><strong>Enantiomers</strong>: mirror images — critical in drug design</li></ul><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Drug Design</h4><p>Thalidomide: one enantiomer treats morning sickness, the other causes birth defects. Modern drugs require single-enantiomer purity.</p></div>',
+        vi: '<p>Cacbon tạo chuỗi, vòng, hydrocarbon. <span class="kt">Đồng phân</span>: cùng công thức, khác cấu trúc/tính chất.</p><ul><li><strong>Cấu trúc</strong>: khác liên kết</li><li><strong>Cis-trans</strong>: khác vị trí không gian</li><li><strong>Đối hình</strong>: ảnh phản chiếu — quan trọng trong thiết kế thuốc</li></ul><div class="cbx"><h4><i class="fas fa-heartbeat"></i> Thiết kế Thuốc</h4><p>Thalidomide: dạng này chữa ốm nghén, dạng kia gây dị tật. Thuốc hiện đòi hỏi tinh khiết đối hình đơn.</p></div>' },
+      { id: 'fgrp', t: 'Functional Groups', tv: 'Nhóm Chức năng',
+        en: '<p><span class="kt">Functional groups</span> determine molecular function:</p><div class="fb">—OH (Hydroxyl) | —COOH (Carboxyl) | —NH₂ (Amino) | —SH (Sulfhydryl) | —PO₄ (Phosphate) | —CH₃ (Methyl)</div><ul><li><strong>—OH</strong>: polar, found in alcohols</li><li><strong>—COOH</strong>: acts as acid, found in amino/fatty acids</li><li><strong>—NH₂</strong>: acts as base, found in amino acids</li><li><strong>—PO₄</strong>: found in DNA, RNA, ATP — stores energy</li><li><strong>—SH</strong>: forms disulfide bridges in proteins</li></ul><div class="sbx"><h4><i class="fas fa-lightbulb"></i> Medical Importance</h4><p>Functional groups are the basis of drug-receptor interactions. Phosphorylation controls cell growth — relevant to cancer.</p></div>',
+        vi: '<p><span class="kt">Nhóm chức năng</span> quyết định chức năng phân tử:</p><div class="fb">—OH (Hydroxyl) | —COOH (Carboxyl) | —NH₂ (Amino) | —SH (Sulfhydryl) | —PO₄ (Phosphate) | —CH₃ (Methyl)</div><ul><li><strong>—OH</strong>: cực, có trong rượu</li><li><strong>—COOH</strong>: axit, có trong axit amin/béo</li><li><strong>—NH₂</strong>: bazơ, có trong axit amin</li><li><strong>—PO₄</strong>: có trong DNA, RNA, ATP — lưu trữ năng lượng</li><li><strong>—SH</strong>: tạo cầu disulfide trong protein</li></ul><div class="sbx"><h4><i class="fas fa-lightbulb"></i> Ý nghĩa Y khoa</h4><p>Nhóm chức năng là nền tảng tương tác thuốc-thụ thể. Phosphorylation kiểm soát tăng trưởng tế bào — liên quan đến ung thư.</p></div>' }
+    ]}
+  ]}
+];
+
+var QB = [
+  {id:1,u:'unit-1',ch:'ch2',s:'elements',tp:'Elements',df:'basic',q:'Which four elements make up approximately 96% of living matter?',qv:'Bốn nguyên tố nào chiếm khoảng 96% vật chất sống?',o:[{t:'Oxygen, Carbon, Hydrogen, Nitrogen',tv:'Oxy, Cacbon, Hydro, Nitơ',c:true},{t:'Oxygen, Calcium, Phosphorus, Potassium',tv:'Oxy, Canxi, Photpho, Kali',c:false},{t:'Carbon, Iron, Sodium, Chlorine',tv:'Cacbon, Sắt, Natri, Clo',c:false},{t:'Hydrogen, Helium, Lithium, Beryllium',tv:'Hydro, Heli, Liti, Beryl',c:false}],ex:'O (65%), C (18.5%), H (9.5%), N (3.3%) = ~96%.',exv:'O (65%), C (18,5%), H (9,5%), N (3,3%) = ~96%.'},
+  {id:2,u:'unit-1',ch:'ch2',s:'atoms',tp:'Atoms',df:'intermediate',q:'A sodium-23 atom (²³₁₁Na) has how many neutrons?',qv:'Một nguyên tử natri-23 có bao nhiêu trung tử?',o:[{t:'12',tv:'12',c:true},{t:'11',tv:'11',c:false},{t:'23',tv:'23',c:false},{t:'1',tv:'1',c:false}],ex:'23 − 11 = 12 neutrons.',exv:'23 − 11 = 12 trung tử.'},
+  {id:3,u:'unit-1',ch:'ch2',s:'isotopes',tp:'Isotopes',df:'intermediate',q:'What is the half-life of carbon-14?',qv:'Bán rã của carbon-14 là bao nhiêu?',o:[{t:'5,730 years — used for fossil dating',tv:'5.730 năm — dùng để phân tích hóa thạch',c:true},{t:'12 years',tv:'12 năm',c:false},{t:'1,000 years',tv:'1.000 năm',c:false},{t:'100 years',tv:'100 năm',c:false}],ex:'¹⁴C half-life = 5,730 years, used for fossils up to ~75,000 years.',exv:'¹⁴C bán rã = 5.730 năm, dùng cho hóa thạch đến ~75.000 năm.'},
+  {id:4,u:'unit-1',ch:'ch2',s:'bonds',tp:'Chemical Bonds',df:'intermediate',q:'Why does oxygen carry δ⁻ in a water molecule?',qv:'Tại sao oxy mang δ⁻ trong phân tử nước?',o:[{t:'Oxygen is more electronegative, pulls shared electrons toward itself',tv:'Oxy điện âm hơn, kéo electron chia sẻ về phía mình',c:true},{t:'Oxygen has fewer protons',tv:'Oxy có ít proton hơn',c:false},{t:'Oxygen loses electrons to hydrogen',tv:'Oxy mất electron cho hydro',c:false},{t:'Oxygen has a larger nucleus',tv:'Oxy có hạt nhân lớn hơn',c:false}],ex:'Electronegativity determines electron pull in polar covalent bonds.',exv:'Điện âm quyết định lực kéo electron trong liên kết cộng hóa trị cực.'},
+  {id:5,u:'unit-1',ch:'ch2',s:'bonds',tp:'Ionic Bonds',df:'advanced',q:'Why do drugs formulated as salts dissolve readily in water?',qv:'Tại sao thuốc dạng muối tan dễ trong nước?',o:[{t:'Ionic bonds weaken as hydration shells shield ions',tv:'Liên kết ion yếu đi do vỏ hydrat bao vệ ion',c:true},{t:'Water breaks all covalent bonds',tv:'Nước phá vỡ tất cả liên kết cộng hóa trị',c:false},{t:'Salts become hydrophobic',tv:'Muối trở thành kị nước',c:false},{t:'Water destroys salt molecules',tv:'Nước phá hủy phân tử muối',c:false}],ex:'Dry crystal ionic bonds are strong; in water, hydration shells weaken them.',exv:'Liên kết ion trong tinh thể rất mạnh; trong nước, vỏ hydrat làm yếu chúng.'},
+  {id:6,u:'unit-1',ch:'ch2',s:'weak',tp:'Molecular Shape',df:'advanced',q:'Why does morphine produce pain relief similar to endorphins?',qv:'Tại sao morphine giảm đau tương tự endorphin?',o:[{t:'Morphine has similar shape, binding endorphin receptors',tv:'Morphine có hình dạng tương tự, liên kết thụ thể endorphin',c:true},{t:'Same molecular formula',tv:'Công thức phân tử giống',c:false},{t:'Morphine increases endorphin production',tv:'Morphine tăng sản xuất endorphin',c:false},{t:'Identical atoms in identical arrangements',tv:'Nguyên tử giống hết trong sắp xếp giống hết',c:false}],ex:'Molecular mimicry — similar shape allows receptor binding.',exv:'Bắt chước phân tử — hình dạng tương tự cho phép liên kết thụ thể.'},
+  {id:7,u:'unit-1',ch:'ch3',s:'wstruct',tp:'Water Structure',df:'basic',q:'What is the bond angle in a water molecule?',qv:'Góc liên kết trong phân tử nước là bao nhiêu?',o:[{t:'104.5°',tv:'104,5°',c:true},{t:'90°',tv:'90°',c:false},{t:'120°',tv:'120°',c:false},{t:'180°',tv:'180°',c:false}],ex:'V-shape with 104.5° due to two bonding + two lone pairs.',exv:'Hình chữ V với 104,5° do hai cặp liên kết + hai cặp đơn lẻ.'},
+  {id:8,u:'unit-1',ch:'ch3',s:'cohesion',tp:'Cohesion',df:'intermediate',q:'What allows a spider to walk on water?',qv:'Điều gì cho phép nhện đi trên nước?',o:[{t:'High surface tension from hydrogen bonding cohesion',tv:'Sức căng bề mặt cao từ sự kết dính liên kết hydro',c:true},{t:'Low density of water',tv:'Khối lượng riêng thấp',c:false},{t:'Evaporative cooling',tv:'Làm mát bay hơi',c:false},{t:'High specific heat',tv:'Nhiệt độ riêng cao',c:false}],ex:'Surface tension results from collective hydrogen bonds at air-water interface.',exv:'Sức căng bề mặt do tổng hợp liên kết hydro tại giao diện không khí-nước.'},
+  {id:9,u:'unit-1',ch:'ch3',s:'temp',tp:'Specific Heat',df:'intermediate',q:'Why does water have a high specific heat?',qv:'Tại sao nước có nhiệt độ riêng cao?',o:[{t:'Heat must break hydrogen bonds before molecules speed up',tv:'Nhiệt phải phá liên kết hydro trước khi phân tử nhanh hơn',c:true},{t:'Water molecules are very heavy',tv:'Phân tử nước rất nặng',c:false},{t:'Water has more atoms',tv:'Nước có nhiều nguyên tử hơn',c:false},{t:'H-bonds release heat spontaneously',tv:'Liên kết hydro tự phóng nhiệt',c:false}],ex:'Heat energy first breaks H-bonds, delaying temperature increase.',exv:'Năng lượng nhiệt trước tiên phá liên kết hydro, trì hoãn tăng nhiệt độ.'},
+  {id:10,u:'unit-1',ch:'ch3',s:'ice',tp:'Ice Floating',df:'advanced',q:'Why does ice float and why is it biologically critical?',qv:'Tại sao băng nổi và tại sao quan trọng về mặt sinh học?',o:[{t:'H-bonds hold molecules apart → ice 10% less dense → insulates water below',tv:'Liên kết hydro giữ phân tử cách xa → băng kém đặc hơn 10% → cách nhiệt nước dưới',c:true},{t:'Ice molecules move faster',tv:'Phân tử băng chuyển động nhanh hơn',c:false},{t:'Ice has fewer H-bonds',tv:'Băng có ít liên kết hydro hơn',c:false},{t:'Ice is denser but floats by surface tension',tv:'Băng đặc hơn nhưng nổi nhờ sức căng bề mặt',c:false}],ex:'Crystalline lattice in ice → molecules farther apart → less dense → floats → insulates.',exv:'Mạng tinh thể trong băng → phân tử cách xa hơn → kém đặc hơn → nổi → cách nhiệt.'},
+  {id:11,u:'unit-1',ch:'ch3',s:'acid',tp:'pH & Buffers',df:'advanced',q:'Which buffer system maintains blood pH at ~7.4?',qv:'Hệ thống đệm nào duy trì pH máu ~7,4?',o:[{t:'Carbonic acid–bicarbonate (H₂CO₃ ⇌ HCO₃⁻ + H⁺)',tv:'Carbonic acid–bicarbonate (H₂CO₃ ⇌ HCO₃⁻ + H⁺)',c:true},{t:'Sodium chloride buffer',tv:'Đệm natri clorid',c:false},{t:'Protein-only buffer',tv:'Đệm chỉ có protein',c:false},{t:'Phosphate-only buffer',tv:'Đệm chỉ có photphat',c:false}],ex:'H₂CO₃/HCO₃⁻ system is primary blood pH buffer.',exv:'Hệ thống H₂CO₃/HCO₃⁻ là đệm pH máu chính.'},
+  {id:12,u:'unit-1',ch:'ch4',s:'org',tp:'Carbon Bonding',df:'basic',q:'How many covalent bonds can carbon form?',qv:'Cacbon có thể tạo bao nhiêu liên kết cộng hóa trị?',o:[{t:'4',tv:'4',c:true},{t:'2',tv:'2',c:false},{t:'6',tv:'6',c:false},{t:'8',tv:'8',c:false}],ex:'4 valence electrons → 4 covalent bonds.',exv:'4 electron ngoài → 4 liên kết cộng hóa trị.'},
+  {id:13,u:'unit-1',ch:'ch4',s:'org',tp:'Miller Experiment',df:'intermediate',q:'What did Miller\'s 1953 experiment demonstrate?',qv:'Thí nghiệm Miller năm 1953 chứng minh điều gì?',o:[{t:'Organic molecules can form abiotically on early Earth',tv:'Phân tử hữu cơ có thể hình thành vô sinh trên Trái đất sơ khai',c:true},{t:'Life spontaneously generates',tv:'Sự sống tự phát sinh',c:false},{t:'Proteins are needed for DNA',tv:'Protein cần thiết cho DNA',c:false},{t:'Cells survive extreme heat',tv:'Tế bào sống ở nhiệt độ cực cao',c:false}],ex:'Complex organic molecules (amino acids) from simple precursors under simulated conditions.',exv:'Phân tử hữu cơ phức tạp (axit amin) từ tiền chất đơn giản điều kiện mô phỏng.'},
+  {id:14,u:'unit-1',ch:'ch4',s:'fgrp',tp:'Functional Groups',df:'intermediate',q:'Which group acts as an acid by donating H⁺?',qv:'Nhóm nào hành động như axit bằng cách cho H⁺?',o:[{t:'Carboxyl (—COOH)',tv:'Carboxyl (—COOH)',c:true},{t:'Hydroxyl (—OH)',tv:'Hydroxyl (—OH)',c:false},{t:'Amino (—NH₂)',tv:'Amino (—NH₂)',c:false},{t:'Methyl (—CH₃)',tv:'Methyl (—CH₃)',c:false}],ex:'Carboxyl donates H⁺ → acts as acid.',exv:'Carboxyl cho H⁺ → hành động như axit.'},
+  {id:15,u:'unit-1',ch:'ch4',s:'cbond',tp:'Isomers',df:'advanced',q:'Why are enantiomers important in pharmacology?',qv:'Tại sao đồng phân đối hình quan trọng trong dược lý?',o:[{t:'One may be therapeutic, the other toxic (e.g., thalidomide)',tv:'Một có thể trị liệu, kia có thể độc (vd: thalidomide)',c:true},{t:'Same biological activity',tv:'Cùng hoạt tính sinh học',c:false},{t:'Cannot be separated',tv:'Không thể tách',c:false},{t:'Only in synthetic compounds',tv:'Chỉ trong hợp chất tổng hợp',c:false}],ex:'Mirror-image molecules can have dramatically different effects.',exv:'Phân tử ảnh phản chiếu có thể có tác dụng rất khác nhau.'}
+];
+
+function buildSidebar() {
+  var nav = document.getElementById('snav');
+  var html = '<div class="nsec"><div class="nst">Navigation</div>';
+  html += '<div class="ni' + (S.pg === 'dashboard' ? ' on' : '') + '" onclick="nav(\'dashboard\')"><i class="fas fa-th-large"></i> Dashboard</div>';
+  html += '</div>';
+
+  html += '<div class="nsec"><div class="nst">Library</div>';
+  BOOKS.forEach(function(book) {
+    var bookExp = S.expNav['b:' + book.id] || false;
+    html += '<div class="nich' + (bookExp ? ' exp' : '') + '" data-nv="b:' + book.id + '" onclick="toggleNav(\'b:' + book.id + '\')">';
+    html += '<i class="fas fa-chevron-right chev"></i><i class="' + book.icon + '"></i> ' + book.name + '</div>';
+    html += '<div class="chsubs' + (bookExp ? ' exp' : '') + '" id="nv-b:' + book.id + '">';
+
+    U.forEach(function(u) {
+      var unitExp = S.expNav['u:' + u.id] || false;
+      html += '<div class="nich nichunit' + (unitExp ? ' exp' : '') + '" data-nv="u:' + u.id + '" onclick="event.stopPropagation();toggleNav(\'u:' + u.id + '\')">';
+      html += '<i class="fas fa-chevron-right chev"></i><i class="' + (u.ic || 'fas fa-book') + '"></i> ' + u.n + ': ' + u.t + '</div>';
+      html += '<div class="chsubs' + (unitExp ? ' exp' : '') + '" id="nv-u:' + u.id + '">';
+
+      if (u.ch) {
+        u.ch.forEach(function(ch) {
+          var chKey = u.id + ':' + ch.id;
+          var chExp = S.expNav['c:' + chKey] || false;
+          html += '<div class="nich nichch' + (chExp ? ' exp' : '') + '" data-nv="c:' + chKey + '" onclick="event.stopPropagation();toggleNav(\'c:' + chKey + '\')">';
+          html += '<i class="fas fa-chevron-right chev"></i>' + ch.t.split(':')[0] + '</div>';
+          html += '<div class="chsubs chsubs2' + (chExp ? ' exp' : '') + '" id="nv-c:' + chKey + '">';
+          ch.sec.forEach(function(s) {
+            var sOn = S.pg === u.id + ':' + ch.id + ':' + s.id;
+            html += '<div class="ni nichsub' + (sOn ? ' on' : '') + '" onclick="nav(\'' + u.id + ':' + ch.id + ':' + s.id + '\')"><i class="fas fa-file-lines"></i> ' + s.t + '</div>';
+          });
+          html += '</div>';
+        });
+      }
+
+      if (S.imp.length > 0) {
+        S.imp.forEach(function(d, i) {
+          if (d.unit === u.id) {
+            html += '<div class="ni nichsub' + (S.pg === 'imp-' + i ? ' on' : '') + '" onclick="nav(\'imp-' + i + '\')"><i class="fas fa-file-import"></i> ' + d.title + '</div>';
+          }
+        });
+      }
+
+      html += '</div>';
+    });
+
+    S.imp.forEach(function(d, i) {
+      if (!d.unit || !U.find(function(u) { return u.id === d.unit; })) {
+        html += '<div class="ni nichsub' + (S.pg === 'imp-' + i ? ' on' : '') + '" onclick="nav(\'imp-' + i + '\')"><i class="fas fa-file-import"></i> ' + d.title + '</div>';
+      }
+    });
+
+    html += '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="nsec"><div class="nst">Study Tools</div>';
+  html += '<div class="ni' + (S.pg === 'quiz' ? ' on' : '') + '" onclick="nav(\'quiz\')"><i class="fas fa-question-circle"></i> Question Bank</div>';
+  html += '<div class="ni' + (S.pg === 'flash' ? ' on' : '') + '" onclick="nav(\'flash\')"><i class="fas fa-clone"></i> Flashcards</div>';
+  html += '<div class="ni" onclick="toggleTA()"><i class="fas fa-graduation-cap"></i> Teaching Assistant</div>';
+  html += '<div class="ni' + (S.pg === 'gen' ? ' on' : '') + '" onclick="nav(\'gen\')"><i class="fas fa-robot"></i> AI Generator</div>';
+  html += '<div class="ni' + (S.pg === 'import' ? ' on' : '') + '" onclick="nav(\'import\')"><i class="fas fa-file-import"></i> Import</div>';
+  html += '<div class="ni' + (S.pg === 'settings' ? ' on' : '') + '" onclick="nav(\'settings\')"><i class="fas fa-cog"></i> Settings</div>';
+  html += '</div>';
+
+  nav.innerHTML = html;
+}
+
+function toggleNav(key) {
+  S.expNav[key] = !S.expNav[key];
+  var el = document.getElementById('nv-' + key);
+  var chev = document.querySelector('[data-nv="' + key + '"]');
+  if (el) el.classList.toggle('exp');
+  if (chev) chev.classList.toggle('exp');
+}
+
+function nav(p) {
+  S.pg = p;
+  if (p && !p.startsWith('imp-') && p !== 'dashboard' && p !== 'lectures' && p !== 'quiz' && p !== 'flash' && p !== 'gen' && p !== 'import' && p !== 'settings') {
+    var parts = p.split(':');
+    BOOKS.forEach(function(b) { S.expNav['b:' + b.id] = true; });
+    var u = U.find(function(x) { return x.id === parts[0]; });
+    if (u) {
+      S.expNav['u:' + u.id] = true;
+      if (parts[1]) S.expNav['c:' + u.id + ':' + parts[1]] = true;
+    }
+  }
+  buildSidebar();
+  var t = document.getElementById('ptitle');
+  var c = document.getElementById('mcon');
+  switch (p) {
+    case 'dashboard': rDash(c, t); break;
+    case 'lectures': rUnits(c, t); break;
+    case 'quiz': rQuiz(c, t); break;
+    case 'flash': rFlash(c, t); break;
+    case 'gen': rGen(c, t); break;
+    case 'import': rImp(c, t); break;
+    case 'settings': rSettings(c, t); break;
+    default:
+      if (p.startsWith('imp-')) {
+        var idx = parseInt(p.split('-')[1]);
+        viewImp(c, t, idx);
+      } else {
+        var parts = p.split(':');
+        var u = U.find(function(x) { return x.id === parts[0]; });
+        if (u) {
+          if (parts.length === 1) rUnit(c, t, u);
+          else if (parts.length === 2) rChapter(c, t, u, parts[1]);
+          else rSection(c, t, u, parts[1], parts[2]);
+        }
+      }
+  }
+  c.scrollTop = 0;
+}
+
+function rDash(c, t) {
+  t.textContent = 'Dashboard';
+  var tc = 0;
+  U.forEach(function(u) { if (u.ch) u.ch.forEach(function(ch) { tc += ch.sec.length; }); });
+  var tq = QB.length + S.imp.reduce(function(s, d) { return s + (d.q ? d.q.length : 0); }, 0);
+  c.innerHTML = '<div class="sgrid">'
+    + '<div class="sc"><div class="si"><i class="fas fa-book-open"></i></div><div class="sv">' + U.length + '</div><div class="sl">Units / Đơn vị học</div></div>'
+    + '<div class="sc"><div class="si"><i class="fas fa-layer-group"></i></div><div class="sv">' + tc + '</div><div class="sl">Sections / Mục nội dung</div></div>'
+    + '<div class="sc"><div class="si"><i class="fas fa-question-circle"></i></div><div class="sv">' + tq + '</div><div class="sl">Questions / Câu hỏi</div></div>'
+    + '<div class="sc"><div class="si"><i class="fas fa-file-import"></i></div><div class="sv">' + S.imp.length + '</div><div class="sl">Imported Docs</div></div>'
+    + '</div>'
+    + '<h2 style="font-size:1.15rem;font-weight:700;margin-bottom:18px">Units — MedStudy</h2>'
+    + '<div class="ugrid">' + U.map(function(u) {
+      var allSec = [];
+      if (u.ch) u.ch.forEach(function(ch) { ch.sec.forEach(function(s) { allSec.push(s); }); });
+      return '<div class="uc" onclick="nav(\'' + u.id + '\')">'
+        + '<div class="uch"><div class="un">' + u.n + '</div><h3>' + u.t + '<span class="vi">' + u.tv + '</span></h3></div>'
+        + '<div class="ucb"><ul class="clist">' + allSec.slice(0, 6).map(function(x) {
+          return '<li>' + x.t + '<br><small style="color:var(--t3)">' + x.tv + '</small></li>';
+        }).join('') + (allSec.length > 6 ? '<li style="color:var(--ac1)">+ ' + (allSec.length - 6) + ' more...</li>' : '') + '</ul></div>'
+        + '<div class="ucf">'
+        + '<button class="btn bp sm" onclick="event.stopPropagation();nav(\'' + u.id + '\')"><i class="fas fa-book-open"></i> Study</button>'
+        + '<button class="btn bs sm" onclick="event.stopPropagation();nav(\'quiz\')"><i class="fas fa-question-circle"></i> Quiz</button>'
+        + '</div></div>';
+    }).join('') + '</div>';
+}
+
+function rUnits(c, t) {
+  t.textContent = 'All Books';
+  var booksHtml = '';
+  BOOKS.forEach(function(book) {
+    booksHtml += '<h2 style="font-size:1.2rem;font-weight:800;margin:28px 0 16px;display:flex;align-items:center;gap:10px"><i class="' + book.icon + '" style="color:var(--ac1)"></i> ' + book.name + '</h2>';
+    booksHtml += '<div class="ugrid" style="margin-bottom:32px">' + U.map(function(u) {
+      var allSec = [];
+      if (u.ch) u.ch.forEach(function(ch) { ch.sec.forEach(function(s) { allSec.push(s); }); });
+      return '<div class="uc" onclick="nav(\'' + u.id + '\')">'
+        + '<div class="uch"><div class="un">' + u.n + '</div><h3>' + u.t + '<span class="vi">' + u.tv + '</span></h3></div>'
+        + '<div class="ucb"><ul class="clist">' + allSec.map(function(x) {
+          return '<li>' + x.t + '<br><small style="color:var(--t3)">' + x.tv + '</small></li>';
+        }).join('') + '</ul></div>'
+        + '<div class="ucf"><button class="btn bp sm" onclick="event.stopPropagation();nav(\'' + u.id + '\')"><i class="fas fa-book-open"></i> Study</button></div>'
+        + '</div>';
+    }).join('') + '</div>';
+  });
+  c.innerHTML = '<div style="max-width:1200px;margin:0 auto">' + booksHtml + '</div>';
+}
+
+function rUnit(c, t, u) {
+  t.textContent = u.n + ': ' + u.t;
+  var html = '<div class="lc">';
+  html += '<div class="lnav"><button class="btn bs sm" onclick="nav(\'lectures\')"><i class="fas fa-th-large"></i> All Books</button></div>';
+  html += '<div style="text-align:center;margin-bottom:28px">';
+  html += '<div style="font-size:.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--ac1);font-weight:700;margin-bottom:6px">' + u.n + '</div>';
+  html += '<h1 style="font-size:1.7rem;font-weight:900;margin-bottom:4px">' + u.t + '</h1>';
+  html += '<p style="font-size:.95rem;color:var(--t2)">' + u.tv + '</p></div>';
+  if (u.ch) {
+    u.ch.forEach(function(ch) {
+      html += '<div style="margin-bottom:24px">';
+      html += '<div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--ac2);font-weight:700;margin-bottom:12px;padding:8px 14px;background:rgba(99,102,241,.08);border-radius:var(--r2);cursor:pointer" onclick="nav(\'' + u.id + ':' + ch.id + '\')"><i class="fas fa-book" style="margin-right:8px"></i> ' + ch.t + '<br><small style="color:var(--t3);font-weight:400">' + ch.tv + '</small></div>';
+      ch.sec.forEach(function(s, i) {
+        html += '<div class="sb" id="c-' + s.id + '">';
+        html += '<div class="sh ' + (i === 0 ? 'op' : '') + '" onclick="tSec(this)">';
+        html += '<i class="fas fa-chevron-down ti"></i>';
+        html += '<h3><span style="color:var(--ac1);margin-right:8px">' + (i + 1) + '.</span> ' + s.t + '<br><small style="color:var(--t3);font-weight:400">' + s.tv + '</small></h3>';
+        html += '</div>';
+        html += '<div class="sb2 ' + (i === 0 ? 'op' : '') + '">';
+        html += '<div class="cen"><div class="cl en"><i class="fas fa-language"></i> English</div><div class="ct">' + s.en + '</div></div>';
+        html += '<div class="cen"><div class="cl vi"><i class="fas fa-language"></i> Tiếng Việt</div><div class="ct">' + s.vi + '</div></div>';
+        html += '</div></div>';
+      });
+      html += '</div>';
+    });
+  }
+  html += '<div style="text-align:center;margin-top:36px;padding:28px;background:var(--bg2);border:1px solid var(--br1);border-radius:var(--r3)">';
+  html += '<h3 style="margin-bottom:10px">Finished ' + u.n + '? / Hoàn thành?</h3>';
+  html += '<p style="color:var(--t2);margin-bottom:18px;font-size:.88rem">Test your knowledge with questions. Kiểm tra kiến thức.</p>';
+  html += '<button class="btn bp" onclick="nav(\'quiz\')"><i class="fas fa-question-circle"></i> Practice Questions</button>';
+  html += '<button class="btn bs" style="margin-left:10px" onclick="nav(\'flash\')"><i class="fas fa-clone"></i> Flashcards</button>';
+  html += '</div></div>';
+  c.innerHTML = html;
+}
+
+function rChapter(c, t, u, chid) {
+  var ch = u.ch.find(function(x) { return x.id === chid; });
+  if (!ch) return rUnit(c, t, u);
+  t.textContent = ch.t;
+  var html = '<div class="lc">';
+  html += '<div class="lnav">';
+  html += '<button class="btn bs sm" onclick="nav(\'' + u.id + '\')"><i class="fas fa-chevron-left"></i> ' + u.n + '</button>';
+  html += '<button class="btn bs sm" onclick="nav(\'lectures\')"><i class="fas fa-th-large"></i> All Books</button>';
+  html += '</div>';
+  html += '<div style="text-align:center;margin-bottom:28px">';
+  html += '<div style="font-size:.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--ac2);font-weight:700;margin-bottom:6px">' + u.n + ' — ' + ch.t.split(':')[0] + '</div>';
+  html += '<h1 style="font-size:1.5rem;font-weight:900;margin-bottom:4px">' + ch.t + '</h1>';
+  html += '<p style="font-size:.9rem;color:var(--t2)">' + ch.tv + '</p></div>';
+  ch.sec.forEach(function(s, i) {
+    html += '<div class="sb" id="c-' + s.id + '">';
+    html += '<div class="sh ' + (i === 0 ? 'op' : '') + '" onclick="tSec(this)">';
+    html += '<i class="fas fa-chevron-down ti"></i>';
+    html += '<h3><span style="color:var(--ac1);margin-right:8px">' + (i + 1) + '.</span> ' + s.t + '<br><small style="color:var(--t3);font-weight:400">' + s.tv + '</small></h3>';
+    html += '</div>';
+    html += '<div class="sb2 ' + (i === 0 ? 'op' : '') + '">';
+    html += '<div class="cen"><div class="cl en"><i class="fas fa-language"></i> English</div><div class="ct">' + s.en + '</div></div>';
+    html += '<div class="cen"><div class="cl vi"><i class="fas fa-language"></i> Tiếng Việt</div><div class="ct">' + s.vi + '</div></div>';
+    html += '</div></div>';
+  });
+  html += '</div>';
+  c.innerHTML = html;
+}
+
+function rSection(c, t, u, chid, sid) {
+  var ch = u.ch.find(function(x) { return x.id === chid; });
+  if (!ch) return rUnit(c, t, u);
+  var s = ch.sec.find(function(x) { return x.id === sid; });
+  if (!s) return rChapter(c, t, u, chid);
+  t.textContent = s.t;
+  var si = ch.sec.indexOf(s);
+  var prev = si > 0 ? ch.sec[si - 1] : null;
+  var next = si < ch.sec.length - 1 ? ch.sec[si + 1] : null;
+  var html = '<div class="lc">';
+  html += '<div class="lnav">';
+  html += prev ? '<button class="btn bs sm" onclick="nav(\'' + u.id + ':' + chid + ':' + prev.id + '\')"><i class="fas fa-chevron-left"></i> ' + prev.t + '</button>' : '<div></div>';
+  html += '<button class="btn bs sm" onclick="nav(\'' + u.id + ':' + chid + '\')"><i class="fas fa-th-large"></i> ' + ch.t.split(':')[0] + '</button>';
+  html += next ? '<button class="btn bs sm" onclick="nav(\'' + u.id + ':' + chid + ':' + next.id + '\')">' + next.t + ' <i class="fas fa-chevron-right"></i></button>' : '<div></div>';
+  html += '</div>';
+  html += '<div style="text-align:center;margin-bottom:28px">';
+  html += '<div style="font-size:.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--ac1);font-weight:700;margin-bottom:6px">' + u.n + ' &bull; ' + ch.t.split(':')[0] + '</div>';
+  html += '<h1 style="font-size:1.5rem;font-weight:900;margin-bottom:4px">' + s.t + '</h1>';
+  html += '<p style="font-size:.9rem;color:var(--t2)">' + s.tv + '</p></div>';
+  html += '<div class="sb"><div class="sb2 op">';
+  html += '<div class="cen"><div class="cl en"><i class="fas fa-language"></i> English</div><div class="ct">' + s.en + '</div></div>';
+  html += '<div class="cen"><div class="cl vi"><i class="fas fa-language"></i> Tiếng Việt</div><div class="ct">' + s.vi + '</div></div>';
+  html += '</div></div>';
+  html += '<div style="text-align:center;margin-top:36px;padding:28px;background:var(--bg2);border:1px solid var(--br1);border-radius:var(--r3)">';
+  html += '<h3 style="margin-bottom:10px">Finished? / Hoàn thành?</h3>';
+  html += '<button class="btn bp" onclick="nav(\'quiz\')"><i class="fas fa-question-circle"></i> Practice Questions</button>';
+  html += '<button class="btn bs" style="margin-left:10px" onclick="nav(\'flash\')"><i class="fas fa-clone"></i> Flashcards</button>';
+  html += '</div></div>';
+  c.innerHTML = html;
+}
+
+function tSec(h) { h.classList.toggle('op'); h.nextElementSibling.classList.toggle('op'); }
+
+function rQuiz(c, t) {
+  t.textContent = 'Question Bank';
+  var uniqueCh = [];
+  QB.forEach(function(q) { if (uniqueCh.indexOf(q.ch) === -1) uniqueCh.push(q.ch); });
+  var chOptions = uniqueCh.map(function(chid) {
+    var chName = chid;
+    U.forEach(function(u) { if (u.ch) { var found = u.ch.find(function(x) { return x.id === chid; }); if (found) chName = found.t; } });
+    return '<option value="' + chid + '">' + chName + '</option>';
+  }).join('');
+  var html = '<div class="qc"><div class="qhdr"><h2>Question Bank</h2><p>Ngân hàng Câu hỏi Trắc nghiệm — Song ngữ Anh/Việt</p></div>';
+  html += '<div class="qf">';
+  html += '<select id="qfU" onchange="fQuiz()"><option value="all">All Chapters</option>' + chOptions + '</select>';
+  html += '<select id="qfD" onchange="fQuiz()"><option value="all">All Levels</option><option value="basic">Basic / Cơ bản</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced / Nâng cao</option></select>';
+  html += '<button class="btn bp sm" onclick="subQ()"><i class="fas fa-check"></i> Submit All</button>';
+  html += '<button class="btn bs sm" onclick="resQ()"><i class="fas fa-redo"></i> Reset</button>';
+  html += '</div>';
+  html += '<div id="qSA"></div><div id="qQs">';
+  QB.forEach(function(q, i) {
+    var chName = q.ch;
+    U.forEach(function(u) { if (u.ch) { var found = u.ch.find(function(x) { return x.id === q.ch; }); if (found) chName = found.t.split(':')[0]; } });
+    html += '<div class="qcard" data-u="' + q.ch + '" data-d="' + q.df + '" id="q-' + q.id + '">';
+    html += '<div class="qn">Q' + (i + 1) + ' &bull; ' + q.df.toUpperCase() + ' &bull; ' + chName + '</div>';
+    html += '<div class="qt">' + q.q + '<span class="vi">' + q.qv + '</span></div>';
+    html += '<ul class="ol">';
+    q.o.forEach(function(o, j) {
+      html += '<li class="oi" data-c="' + o.c + '" onclick="selO(this)"><span class="ol2">' + String.fromCharCode(65 + j) + '</span><span class="otp">' + o.t + '<span class="vi">' + o.tv + '</span></span></li>';
+    });
+    html += '</ul>';
+    html += '<div class="exp" id="ex-' + q.id + '"><h4><i class="fas fa-lightbulb"></i> Explanation / Giải thích</h4><p>' + q.ex + '</p><p style="margin-top:6px;color:var(--t3);font-style:italic">' + q.exv + '</p></div>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+  c.innerHTML = html;
+}
+
+function selO(e) {
+  var c = e.closest('.qcard');
+  if (c.classList.contains('ans')) return;
+  c.querySelectorAll('.oi').forEach(function(o) { o.classList.remove('sel'); });
+  e.classList.add('sel');
+}
+
+function subQ() {
+  var co = 0, tt = 0;
+  document.querySelectorAll('.qcard').forEach(function(c) {
+    if (c.style.display === 'none') return;
+    c.classList.add('ans');
+    var s = c.querySelector('.oi.sel');
+    var cr = c.querySelector('.oi[data-c="true"]');
+    var e = c.querySelector('.exp');
+    if (s) { tt++; if (s.dataset.c === 'true') { s.classList.add('cor'); co++; } else { s.classList.add('wrg'); cr.classList.add('cor'); } }
+    else { cr.classList.add('cor'); }
+    if (e) e.classList.add('sh');
+  });
+  var sa = document.getElementById('qSA');
+  if (tt > 0) {
+    var p = Math.round(co / tt * 100);
+    var badge = p >= 80 ? '<span class="tag tagg"><i class="fas fa-check-circle"></i> Excellent!</span>' : p >= 60 ? '<span class="tag taga"><i class="fas fa-star"></i> Good!</span>' : '<span class="tag tagb"><i class="fas fa-book"></i> Keep studying!</span>';
+    sa.innerHTML = '<div class="qsc"><div class="sv2">' + p + '%</div><div class="sl2">' + co + '/' + tt + ' correct</div><div style="margin-top:10px">' + badge + '</div></div>';
+  }
+}
+
+function resQ() {
+  document.querySelectorAll('.qcard').forEach(function(c) {
+    c.classList.remove('ans');
+    c.querySelectorAll('.oi').forEach(function(o) { o.classList.remove('sel', 'cor', 'wrg'); });
+    var e = c.querySelector('.exp');
+    if (e) e.classList.remove('sh');
+  });
+  document.getElementById('qSA').innerHTML = '';
+}
+
+function fQuiz() {
+  var u = document.getElementById('qfU').value;
+  var d = document.getElementById('qfD').value;
+  document.querySelectorAll('.qcard').forEach(function(c) {
+    c.style.display = ((u === 'all' || c.dataset.u === u) && (d === 'all' || c.dataset.d === d)) ? '' : 'none';
+  });
+}
+
+function rFlash(c, t) {
+  t.textContent = 'Flashcards';
+  var q = QB[S.fi] || QB[0];
+  S.ff = false;
+  var correctAns = q.o.filter(function(o) { return o.c; });
+  var html = '<div class="fc">';
+  html += '<div class="fcnt">' + (S.fi + 1) + ' / ' + QB.length + '</div>';
+  html += '<div class="fw"><div class="flc" id="flc" onclick="flip()">';
+  html += '<div class="ff ffr">';
+  html += '<div class="cl en" style="margin-bottom:14px"><i class="fas fa-language"></i> Question / Câu hỏi</div>';
+  html += '<h3 style="font-size:1.15rem;text-align:center;line-height:1.6">' + q.q + '</h3>';
+  html += '<p style="color:var(--t2);margin-top:10px;text-align:center">' + q.qv + '</p>';
+  html += '<p style="color:var(--t3);margin-top:22px;font-size:.78rem">Click to flip / Bấm để lật</p>';
+  html += '</div>';
+  html += '<div class="ff ffbk">';
+  html += '<div class="cl vi" style="margin-bottom:14px"><i class="fas fa-language"></i> Answer / Đáp án</div>';
+  html += '<div style="text-align:center">';
+  correctAns.forEach(function(o) {
+    html += '<h3 style="font-size:1.05rem;color:var(--ac4);margin-bottom:6px">' + o.t + '</h3>';
+    html += '<p style="color:var(--t2)">' + o.tv + '</p>';
+  });
+  html += '<div style="margin-top:14px;padding:12px;background:var(--bg3);border-radius:var(--r2);text-align:left">';
+  html += '<p style="font-size:.82rem;color:var(--t2);line-height:1.7">' + q.ex + '</p>';
+  html += '<p style="font-size:.8rem;color:var(--t3);margin-top:6px;font-style:italic">' + q.exv + '</p>';
+  html += '</div></div></div></div></div>';
+  html += '<div class="fctrl"><button class="btn bs" onclick="pFlash()"><i class="fas fa-chevron-left"></i> Prev</button>';
+  html += '<button class="btn bp" onclick="nFlash()">Next <i class="fas fa-chevron-right"></i></button></div></div>';
+  c.innerHTML = html;
+}
+
+function flip() { S.ff = !S.ff; document.getElementById('flc').classList.toggle('flp', S.ff); }
+function nFlash() { S.fi = (S.fi + 1) % QB.length; rFlash(document.getElementById('mcon'), document.getElementById('ptitle')); }
+function pFlash() { S.fi = (S.fi - 1 + QB.length) % QB.length; rFlash(document.getElementById('mcon'), document.getElementById('ptitle')); }
+
+function rGen(c, t) {
+  t.textContent = 'AI Generator';
+  var hasKey = S.keys.length > 0 && S.activeKey;
+  var html = '<div class="gc"><div class="gf">';
+  html += '<h2 style="font-size:1.25rem;font-weight:800;margin-bottom:4px"><i class="fas fa-robot" style="color:var(--ac1)"></i> AI Content Generator</h2>';
+  html += '<p style="color:var(--t2);font-size:.85rem;margin-bottom:22px">Tạo câu hỏi & bài giảng từ tài liệu — Powered by Google Gemini</p>';
+  if (!hasKey) {
+    html += '<div class="gen-status warn"><i class="fas fa-exclamation-triangle"></i> No API key configured. Go to <a href="#" onclick="nav(\'settings\');return false" style="color:var(--ac5)">Settings</a> to add your Gemini API key.</div>';
+  }
+  html += '<div class="fg"><label>Mode / Chế độ</label><select id="gMode"><option value="questions">Generate Questions / Tạo Câu hỏi</option><option value="lecture">Generate Lecture Notes / Tạo Bài giảng</option></select></div>';
+  html += '<div class="fg"><label>Source / Nguồn</label><select id="gSrc"><option value="topic">By Topic / Theo Chủ đề</option><option value="document">From Imported Document / Từ Tài liệu</option></select></div>';
+  html += '<div class="fg" id="gTopicFg"><label>Topic / Chủ đề</label><input type="text" id="gT" placeholder="e.g., Acid-Base Balance, Enzyme Kinetics..."></div>';
+  html += '<div class="fg" id="gDocFg" style="display:none"><label>Select Document</label><select id="gDoc"><option value="">-- Select --</option></select></div>';
+  html += '<div class="fg"><label>Number / Số lượng</label><select id="gC"><option value="5">5</option><option value="10" selected>10</option><option value="15">15</option></select></div>';
+  html += '<div class="fg"><label>Difficulty / Độ khó</label><select id="gD"><option value="mixed">Mixed</option><option value="basic">Basic</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced / Clinical</option></select></div>';
+  html += '<div class="fg"><label>Reference Material (optional)</label><textarea id="gR" placeholder="Paste reference text for more accurate results..."></textarea></div>';
+  html += '<button class="btn bp" onclick="genContent()"' + (hasKey ? '' : ' disabled style="opacity:.5;cursor:not-allowed"') + '><i class="fas fa-magic"></i> Generate</button>';
+  html += '</div><div id="gO"></div></div>';
+  c.innerHTML = html;
+
+  document.getElementById('gSrc').onchange = function() {
+    document.getElementById('gTopicFg').style.display = this.value === 'topic' ? '' : 'none';
+    document.getElementById('gDocFg').style.display = this.value === 'document' ? '' : 'none';
+  };
+
+  var docSel = document.getElementById('gDoc');
+  S.imp.forEach(function(d, i) {
+    var opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = d.title;
+    docSel.appendChild(opt);
+  });
+}
+
+async function genContent() {
+  var mode = document.getElementById('gMode').value;
+  var src = document.getElementById('gSrc').value;
+  var topic = document.getElementById('gT').value.trim();
+  var docIdx = document.getElementById('gDoc').value;
+  var count = parseInt(document.getElementById('gC').value);
+  var diff = document.getElementById('gD').value;
+  var ref = document.getElementById('gR').value.trim();
+
+  var content = '';
+  if (src === 'document' && docIdx !== '') {
+    content = S.imp[parseInt(docIdx)].content || '';
+  }
+  if (!topic && !content) { alert('Please enter a topic or select a document'); return; }
+  if (S.keys.length === 0) { alert('Please add a Gemini API key in Settings first'); return; }
+
+  var o = document.getElementById('gO');
+  o.innerHTML = '<div class="glo"><i class="fas fa-spinner"></i><p>Generating with Gemini... / Đang tạo...</p></div>';
+
+  var apiKey = S.activeKey || S.keys[0];
+  var prompt = buildPrompt(mode, topic, content, count, diff, ref);
+
+  try {
+    var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 8192 } })
+    });
+    var data = await resp.json();
+    if (data.error) throw new Error(data.error.message);
+    var text = data.candidates[0].content.parts[0].text;
+    var parsed = parseGeminiResponse(text, mode);
+    if (mode === 'questions') renderGenQuestions(o, parsed, topic || 'Imported');
+    else renderGenLecture(o, parsed, topic || 'Imported');
+  } catch (err) {
+    o.innerHTML = '<div class="gen-status err"><i class="fas fa-exclamation-circle"></i> Error: ' + err.message + '</div>';
+  }
+}
+
+function buildPrompt(mode, topic, content, count, diff, ref) {
+  var ctx = content ? '\n\nReference content:\n' + content.substring(0, 6000) : '';
+  var refCtx = ref ? '\n\nAdditional reference:\n' + ref : '';
+  var diffMap = { basic: 'basic/foundational level', intermediate: 'intermediate level suitable for medical students', advanced: 'advanced/clinical level with medical applications', mixed: 'mixed difficulty levels' };
+
+  if (mode === 'questions') {
+    return 'Generate exactly ' + count + ' high-quality bilingual (English/Vietnamese) multiple-choice quiz questions about: ' + (topic || 'the provided content') + '.\nDifficulty: ' + diffMap[diff] + '.' + ctx + refCtx + '\n\nFor EACH question, return JSON array with objects having:\n- q: question in English\n- qv: question in Vietnamese\n- o: array of 4 options, each with {t: English text, tv: Vietnamese text, c: true/false}\n- ex: explanation in English\n- exv: explanation in Vietnamese\n- df: difficulty (basic/intermediate/advanced)\n\nIMPORTANT: Return ONLY valid JSON array, no markdown. Medical school quality questions.';
+  } else {
+    return 'Generate comprehensive bilingual (English/Vietnamese) lecture notes about: ' + (topic || 'the provided content') + '.\n' + ctx + refCtx + '\n\nReturn a JSON object with:\n- title: section title in English\n- titlev: section title in Vietnamese\n- sections: array of {heading: English heading, headingv: Vietnamese heading, content_en: HTML content in English with <strong>, <em>, <span class="kt"> for key terms, <div class="fb"> for formulas, <div class="cbx"><h4><i class="fas fa-heartbeat"></i> Clinical Relevance</h4><p>...</p></div> for clinical boxes, <div class="sbx"><h4><i class="fas fa-lightbulb"></i> Key Concept</h4><p>...</p></div> for key concepts. content_vi: same content in Vietnamese}\n\nIMPORTANT: Return ONLY valid JSON object, no markdown. Medical school quality lecture notes.';
+  }
+}
+
+function parseGeminiResponse(text, mode) {
+  text = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+  try { return JSON.parse(text); }
+  catch (e) {
+    var start = text.indexOf('[');
+    var end = text.lastIndexOf(']');
+    if (start !== -1 && end !== -1) {
+      try { return JSON.parse(text.substring(start, end + 1)); } catch (e2) {}
+    }
+    start = text.indexOf('{');
+    end = text.lastIndexOf('}');
+    if (start !== -1 && end !== -1) {
+      try { return JSON.parse(text.substring(start, end + 1)); } catch (e3) {}
+    }
+    throw new Error('Failed to parse AI response. Please try again.');
+  }
+}
+
+function renderGenQuestions(o, qs, topic) {
+  var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">';
+  html += '<h3 style="font-weight:700">Generated: ' + topic + ' (' + qs.length + ' questions)</h3>';
+  html += '<button class="btn bp sm" onclick="saveGenQ()"><i class="fas fa-save"></i> Save to Bank</button></div>';
+  html += '<div id="gQs">';
+  qs.forEach(function(q, i) {
+    html += '<div class="qcard genq" data-u="generated">';
+    html += '<div class="qn">Gen Q' + (i + 1) + ' &bull; ' + (q.df || 'intermediate').toUpperCase() + '</div>';
+    html += '<div class="qt">' + q.q + '<span class="vi">' + q.qv + '</span></div>';
+    html += '<ul class="ol">';
+    q.o.forEach(function(o, j) {
+      html += '<li class="oi" data-c="' + o.c + '" onclick="selO(this)"><span class="ol2">' + String.fromCharCode(65 + j) + '</span><span class="otp">' + o.t + '<span class="vi">' + o.tv + '</span></span></li>';
+    });
+    html += '</ul>';
+    html += '<div class="exp" id="gex-' + i + '"><h4><i class="fas fa-lightbulb"></i> Explanation</h4><p>' + q.ex + '</p><p style="margin-top:6px;color:var(--t3);font-style:italic">' + q.exv + '</p></div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  html += '<div style="text-align:center;margin-top:18px"><button class="btn bp" onclick="subGenQ()"><i class="fas fa-check"></i> Submit & Score</button></div>';
+  o.innerHTML = html;
+}
+
+function renderGenLecture(o, data, topic) {
+  var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">';
+  html += '<h3 style="font-weight:700">' + (data.title || topic) + '</h3>';
+  html += '<button class="btn bp sm" onclick="saveGenLecture()"><i class="fas fa-save"></i> Save as Document</button></div>';
+  html += '<div class="lc"><div class="sb"><div class="sb2 op">';
+  if (data.sections) {
+    data.sections.forEach(function(sec, i) {
+      html += '<div class="cen">';
+      html += '<div class="cl en"><i class="fas fa-language"></i> ' + (sec.heading || 'Section ' + (i + 1)) + '</div>';
+      html += '<div class="ct">' + (sec.content_en || '') + '</div>';
+      html += '<div class="cl vi" style="margin-top:14px"><i class="fas fa-language"></i> ' + (sec.headingv || '') + '</div>';
+      html += '<div class="ct">' + (sec.content_vi || '') + '</div>';
+      html += '</div>';
+    });
+  }
+  html += '</div></div></div>';
+  o.innerHTML = html;
+}
+
+function subGenQ() {
+  var co = 0, tt = 0;
+  document.querySelectorAll('.genq').forEach(function(c) {
+    c.classList.add('ans');
+    var s = c.querySelector('.oi.sel');
+    var cr = c.querySelector('.oi[data-c="true"]');
+    var e = c.querySelector('.exp');
+    if (s) { tt++; if (s.dataset.c === 'true') { s.classList.add('cor'); co++; } else { s.classList.add('wrg'); cr.classList.add('cor'); } }
+    else { cr.classList.add('cor'); }
+    if (e) e.classList.add('sh');
+  });
+  if (tt > 0) {
+    var p = Math.round(co / tt * 100);
+    var sa = document.createElement('div');
+    sa.innerHTML = '<div class="qsc"><div class="sv2">' + p + '%</div><div class="sl2">' + co + '/' + tt + ' correct</div></div>';
+    document.getElementById('gO').prepend(sa);
+  }
+}
+
+function saveGenQ() {
+  var qs = document.querySelectorAll('.genq');
+  var saved = [];
+  qs.forEach(function(c) {
+    var qt = c.querySelector('.qt');
+    var qText = qt ? qt.childNodes[0].textContent.trim() : '';
+    var qvText = qt ? (qt.querySelector('.vi') ? qt.querySelector('.vi').textContent.trim() : '') : '';
+    var opts = [];
+    c.querySelectorAll('.oi').forEach(function(oi) {
+      var otp = oi.querySelector('.otp');
+      opts.push({ t: otp ? otp.childNodes[0].textContent.trim() : '', tv: otp && otp.querySelector('.vi') ? otp.querySelector('.vi').textContent.trim() : '', c: oi.dataset.c === 'true' });
+    });
+    var exp = c.querySelector('.exp');
+    var exText = exp ? (exp.querySelector('p') ? exp.querySelector('p').textContent : '') : '';
+    var exvText = exp ? (exp.querySelectorAll('p')[1] ? exp.querySelectorAll('p')[1].textContent : '') : '';
+    saved.push({ q: qText, qv: qvText, o: opts, ex: exText, exv: exvText, df: 'intermediate', u: 'generated', ch: 'generated', s: 'generated', tp: 'AI Generated' });
+  });
+  var maxId = QB.reduce(function(m, q) { return Math.max(m, q.id); }, 0);
+  saved.forEach(function(q, i) { q.id = maxId + i + 1; QB.push(q); });
+  alert('Saved ' + saved.length + ' questions to bank! / Đã lưu ' + saved.length + ' câu hỏi!');
+}
+
+function saveGenLecture() {
+  var title = document.querySelector('#gO h3');
+  var content = document.querySelector('#gO .ct');
+  if (title && content) {
+    var nextUnit = U.length;
+    var doc = { title: title.textContent, unit: U.length > 0 ? U[U.length - 1].id : 'unit-1', content: content.innerHTML, date: new Date().toISOString(), q: [] };
+    S.imp.push(doc);
+    alert('Lecture saved! Go to Import to manage. / Bài giảng đã lưu!');
+  }
+}
+
+function rImp(c, t) {
+  t.textContent = 'Import Documents';
+  var nextUnitNum = U.length + 1;
+  var html = '<div class="imp">';
+  html += '<div class="drop" id="drop" onclick="document.getElementById(\'fi\').click()" ondragover="event.preventDefault();this.classList.add(\'dov\')" ondragleave="this.classList.remove(\'dov\')" ondrop="event.preventDefault();handleDrop(event)">';
+  html += '<i class="fas fa-cloud-upload-alt"></i>';
+  html += '<h3>Import Documents / Import Tài liệu</h3>';
+  html += '<p>Drag & drop or click to upload .md, .txt files<br>Hỗ trợ file .md, .txt — sẽ tự động phân tích và tạo Unit ' + nextUnitNum + '</p>';
+  html += '<input type="file" id="fi" style="display:none" accept=".md,.txt" multiple onchange="handleFiles(this.files)"></div>';
+  html += '<div class="fm" id="impForm">';
+  html += '<h3 style="font-size:1rem;font-weight:700;margin-bottom:16px"><i class="fas fa-edit" style="color:var(--ac1)"></i> Manual Input / Nhập thủ công</h3>';
+  html += '<div class="fg"><label>Document Title / Tiêu đề</label><input type="text" id="impT" placeholder="e.g., Chapter 5: Membrane Transport"></div>';
+  html += '<div class="fg"><label>Unit / Đơn vị (tự động tạo Unit ' + nextUnitNum + ')</label><input type="text" id="impU" value="unit-' + nextUnitNum + '" readonly style="opacity:.7"></div>';
+  html += '<div class="fg"><label>Content (Markdown) / Nội dung</label><textarea id="impC" placeholder="Paste document content here..."></textarea></div>';
+  html += '<div class="fg"><label>Auto-generate with AI? / Tạo tự động bằng AI?</label><select id="impQ"><option value="ai">Yes, generate questions + lecture / Có</option><option value="local">Generate questions only (template) / Chỉ câu hỏi</option><option value="no">No / Không</option></select></div>';
+  html += '<button class="btn bp" onclick="processImport()"><i class="fas fa-cog"></i> Process & Add / Xử lý</button></div>';
+  html += '<div class="il" id="impList"></div></div>';
+  c.innerHTML = html;
+  renderImpList();
+}
+
+function handleDrop(e) { handleFiles(e.dataTransfer.files); }
+
+function handleFiles(files) {
+  Array.from(files).forEach(function(f) {
+    var r = new FileReader();
+    r.onload = function(e) {
+      document.getElementById('impC').value = e.target.result;
+      document.getElementById('impT').value = f.name.replace(/\.[^.]+$/, '');
+    };
+    r.readAsText(f);
+  });
+}
+
+async function processImport() {
+  var ti = document.getElementById('impT').value.trim();
+  var co = document.getElementById('impC').value.trim();
+  var ui = document.getElementById('impU').value;
+  var gq = document.getElementById('impQ').value;
+  if (!ti || !co) { alert('Please fill in title and content'); return; }
+
+  var doc = { title: ti, unit: ui, content: co, date: new Date().toISOString(), q: [] };
+
+  if (gq === 'ai' && S.keys.length > 0) {
+    var o = document.getElementById('impList');
+    o.innerHTML = '<div class="glo" style="display:block;padding:20px"><i class="fas fa-spinner"></i><p>Generating content with Gemini... / Đang tạo nội dung...</p></div>';
+    try {
+      var apiKey = S.activeKey || S.keys[0];
+      var prompt = 'Analyze the following document and create:\n1. Structured sections with English and Vietnamese content\n2. 10 bilingual multiple-choice questions\n\nDocument:\n' + co.substring(0, 8000) + '\n\nReturn JSON: {sections: [{heading: "EN", headingv: "VI", content_en: "HTML", content_vi: "HTML"}], questions: [{q: "EN question", qv: "VI question", o: [{t: "EN", tv: "VI", c: true/false}], ex: "EN", exv: "VI", df: "basic/intermediate/advanced"}]}\nUse HTML classes: kt for key terms, fb for formulas, cbx for clinical boxes, sbx for key concepts. Return ONLY valid JSON.';
+      var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 8192 } })
+      });
+      var data = await resp.json();
+      if (data.error) throw new Error(data.error.message);
+      var text = data.candidates[0].content.parts[0].text;
+      var parsed = parseGeminiResponse(text, 'mixed');
+      if (parsed.sections) {
+        var autoContent = '';
+        parsed.sections.forEach(function(sec) {
+          autoContent += '<div class="cen">';
+          autoContent += '<div class="cl en"><i class="fas fa-language"></i> ' + sec.heading + '</div><div class="ct">' + sec.content_en + '</div>';
+          autoContent += '<div class="cl vi" style="margin-top:10px"><i class="fas fa-language"></i> ' + sec.headingv + '</div><div class="ct">' + sec.content_vi + '</div>';
+          autoContent += '</div>';
+        });
+        doc.generatedContent = autoContent;
+      }
+      if (parsed.questions) {
+        var maxId = QB.reduce(function(m, q) { return Math.max(m, q.id); }, 0);
+        parsed.questions.forEach(function(q, i) {
+          q.id = maxId + i + 1;
+          q.u = ui;
+          q.ch = 'imported';
+          q.s = 'imported';
+          q.tp = 'Imported';
+          QB.push(q);
+          doc.q.push(q);
+        });
+      }
+    } catch (err) {
+      alert('AI generation error: ' + err.message + '. Saving document without AI content.');
+    }
+  } else if (gq === 'local') {
+    doc.q = mkLocalQ(ti, 10);
+    var maxId = QB.reduce(function(m, q) { return Math.max(m, q.id); }, 0);
+    doc.q.forEach(function(q, i) { q.id = maxId + i + 1; q.u = ui; q.ch = 'imported'; q.s = 'imported'; QB.push(q); });
+  }
+
+  S.imp.push(doc);
+  alert('Document "' + ti + '" imported successfully! / Tài liệu đã import thành công!');
+  renderImpList();
+  document.getElementById('impT').value = '';
+  document.getElementById('impC').value = '';
+}
+
+function mkLocalQ(topic, n) {
+  var templates = [
+    {q:'What is the primary function of ' + topic + '?',qv:'Chức năng chính của ' + topic + ' là gì?',o:[{t:'Regulating cellular processes',tv:'Điều hòa quá trình tế bào',c:true},{t:'Storing genetic information',tv:'Lưu trữ thông tin di truyền',c:false},{t:'Producing energy',tv:'Tạo năng lượng',c:false},{t:'Structural support only',tv:'Chỉ hỗ trợ cấu trúc',c:false}],ex:'Core function explained.',exv:'Chức năng cốt lõi được giải thích.',df:'basic'},
+    {q:'Which clinical condition relates to ' + topic + '?',qv:'Tình trạng lâm sàng nào liên quan ' + topic + '?',o:[{t:'Dysregulation leads to systemic effects',tv:'Rối loạn gây tác động toàn thân',c:true},{t:'No clinical relevance',tv:'Không có ý nghĩa lâm sàng',c:false},{t:'Only affects plants',tv:'Chỉ ảnh hưởng thực vật',c:false},{t:'Only in laboratory',tv:'Chỉ trong phòng thí nghiệm',c:false}],ex:'Clinical significance explained.',exv:'Ý nghĩa lâm sàng được giải thích.',df:'intermediate'},
+    {q:'How does ' + topic + ' relate to homeostasis?',qv:topic + ' liên quan đến nội môi như thế nào?',o:[{t:'Maintains stable internal environment',tv:'Duy trì môi trường nội tại ổn định',c:true},{t:'Disrupts equilibrium',tv:'Phá vỡ sự cân bằng',c:false},{t:'No relationship',tv:'Không liên quan',c:false},{t:'Only in extreme conditions',tv:'Chỉ trong điều kiện cực đoan',c:false}],ex:'Homeostatic role explained.',exv:'Vai trò nội môi được giải thích.',df:'basic'},
+    {q:'Which biomarker is associated with ' + topic + '?',qv:'Marker sinh học nào liên quan ' + topic + '?',o:[{t:'Serum concentration levels',tv:'Nồng độ huyết thanh',c:true},{t:'Hair color only',tv:'Chỉ màu tóc',c:false},{t:'Nail growth rate',tv:'Tốc độ mọc móng',c:false},{t:'Eye color',tv:'Màu mắt',c:false}],ex:'Biomarker association explained.',exv:'Liên kết marker sinh học được giải thích.',df:'intermediate'},
+    {q:'What is the evolutionary significance of ' + topic + '?',qv:'Ý nghĩa tiến hóa của ' + topic + ' là gì?',o:[{t:'Enhanced survival through adaptation',tv:'Sống sót tăng qua thích nghi',c:true},{t:'No evolutionary role',tv:'Không vai trò tiến hóa',c:false},{t:'Only in extinct species',tv:'Chỉ ở loài tuyệt chủng',c:false},{t:'Recently evolved',tv:'Mới tiến hóa',c:false}],ex:'Evolutionary context explained.',exv:'Bối cảnh tiến hóa được giải thích.',df:'advanced'}
+  ];
+  return templates.slice(0, Math.min(n, templates.length));
+}
+
+function renderImpList() {
+  var el = document.getElementById('impList');
+  if (!el) return;
+  var html = '<h3 style="font-size:1rem;font-weight:700;margin-bottom:14px">Imported Documents (' + S.imp.length + ')</h3>';
+  S.imp.forEach(function(d, i) {
+    html += '<div class="ii">';
+    html += '<div class="iic"><i class="fas fa-file-alt"></i></div>';
+    html += '<div class="iii"><h4>' + d.title + '</h4><p>' + (d.date ? new Date(d.date).toLocaleDateString() : '') + ' &bull; ' + (d.q ? d.q.length + ' questions' : 'No questions') + ' &bull; ' + (d.unit || 'No unit') + '</p></div>';
+    html += '<button class="btn bs sm" onclick="viewImp(document.getElementById(\'mcon\'), document.getElementById(\'ptitle\'), ' + i + ')"><i class="fas fa-eye"></i></button>';
+    html += '<button class="btn bs sm" onclick="S.imp.splice(' + i + ',1);renderImpList()" style="color:var(--er)"><i class="fas fa-trash"></i></button>';
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
+
+function viewImp(c, t, i) {
+  var d = S.imp[i];
+  if (!d) return;
+  t.textContent = d.title;
+  var html = '<div class="lc">';
+  html += '<div class="lnav"><button class="btn bs sm" onclick="nav(\'import\')"><i class="fas fa-arrow-left"></i> Back</button></div>';
+  if (d.generatedContent) {
+    html += '<div class="sb"><div class="sb2 op">' + d.generatedContent + '</div></div>';
+  } else {
+    html += '<div class="sb"><div class="sb2 op"><div class="cl en" style="margin-bottom:10px"><i class="fas fa-language"></i> Content</div><div class="ct"><p>' + simpleMd(d.content) + '</p></div></div></div>';
+  }
+  if (d.q && d.q.length) {
+    html += '<h3 style="margin:20px 0 14px;font-weight:700">Generated Questions (' + d.q.length + ')</h3>';
+    d.q.forEach(function(q, j) {
+      html += '<div class="qcard"><div class="qn">Q' + (j + 1) + '</div><div class="qt">' + q.q + '<span class="vi">' + (q.qv || '') + '</span></div>';
+      if (q.o) {
+        html += '<ul class="ol">';
+        q.o.forEach(function(o, k) {
+          html += '<li class="oi" data-c="' + o.c + '" onclick="selO(this)"><span class="ol2">' + String.fromCharCode(65 + k) + '</span><span class="otp">' + o.t + '<span class="vi">' + (o.tv || '') + '</span></span></li>';
+        });
+        html += '</ul>';
+      }
+      html += '</div>';
+    });
+  }
+  html += '</div>';
+  c.innerHTML = html;
+}
+
+function simpleMd(text) {
+  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/`(.*?)`/g, '<code>$1</code>').replace(/^### (.*$)/gm, '<h3>$1</h3>').replace(/^## (.*$)/gm, '<h2>$1</h2>').replace(/^# (.*$)/gm, '<h1>$1</h1>').replace(/^- (.*$)/gm, '<li>$1</li>').replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+}
+
+function rSettings(c, t) {
+  t.textContent = 'Settings';
+  var html = '<div class="gc"><div class="gf">';
+  html += '<h2 style="font-size:1.25rem;font-weight:800;margin-bottom:4px"><i class="fas fa-cog" style="color:var(--ac1)"></i> API Key Settings</h2>';
+  html += '<p style="color:var(--t2);font-size:.85rem;margin-bottom:22px">Quản lý API Keys cho Google Gemini — Quản lý nhiều key</p>';
+
+  html += '<div class="fg"><label>Active API Key (dùng chính)</label><select id="sActiveKey" style="margin-bottom:16px" onchange="S.activeKey=this.value;localStorage.setItem(\'cb_activekey\',this.value);buildSidebar()">';
+  html += '<option value="">-- Select active key --</option>';
+  S.keys.forEach(function(k, i) {
+    var masked = k.substring(0, 8) + '...' + k.substring(k.length - 4);
+    html += '<option value="' + k + '"' + (S.activeKey === k ? ' selected' : '') + '>Key ' + (i + 1) + ': ' + masked + '</option>';
+  });
+  html += '</select></div>';
+
+  html += '<div class="fg"><label>API Keys</label></div>';
+  html += '<div id="keyList">';
+  S.keys.forEach(function(k, i) {
+    html += '<div class="apikey-row">';
+    html += '<input type="password" value="' + k + '" data-idx="' + i + '" onchange="updateKey(' + i + ', this.value)" placeholder="Paste Gemini API key...">';
+    html += '<button class="btn-del" onclick="removeKey(' + i + ')"><i class="fas fa-trash"></i></button>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="addkey-btn" onclick="addKey()"><i class="fas fa-plus"></i> Add API Key / Thêm API Key</div>';
+
+  html += '<div style="padding:14px;background:var(--bg3);border-radius:var(--r2);margin-bottom:16px">';
+  html += '<p style="font-size:.8rem;color:var(--t2);line-height:1.7">';
+  html += '<strong style="color:var(--t1)">Hướng dẫn:</strong><br>';
+  html += '1. Truy cập <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--ac1)">Google AI Studio</a> để lấy API key miễn phí<br>';
+  html += '2. Nhấn "+" để thêm key mới<br>';
+  html += '3. Chọn key active từ dropdown<br>';
+  html += '4. Bạn có thể thêm nhiều key dự phòng — khi key chính hết hạn, hệ thống sẽ thử key tiếp theo</p>';
+  html += '</div>';
+
+  html += '<div style="padding:14px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:var(--r2);margin-bottom:16px">';
+  html += '<p style="font-size:.8rem;color:var(--t2);line-height:1.7">';
+  html += '<strong style="color:var(--ac1)">Lưu ý:</strong> API key được lưu trong trình duyệt (localStorage). Không chia sẻ key với người khác.</p>';
+  html += '</div>';
+
+  html += '<div class="fg"><label>Data Management</label></div>';
+  html += '<div style="display:flex;gap:10px;flex-wrap:wrap">';
+  html += '<button class="btn bs" onclick="exportData()"><i class="fas fa-download"></i> Export All Data</button>';
+  html += '<button class="btn bs" onclick="importData()"><i class="fas fa-upload"></i> Import Data</button>';
+  html += '<button class="btn bs" onclick="if(confirm(\'Clear all imported data?\')){S.imp=[];QB=QB.filter(function(q){return q.u!==\'generated\'&&q.u!==\'imported\'});saveLocal();nav(\'settings\')}" style="color:var(--er)"><i class="fas fa-trash"></i> Clear Imported</button>';
+  html += '</div>';
+  html += '<input type="file" id="importFileInput" style="display:none" accept=".json" onchange="handleImportData(this.files)">';
+  html += '</div></div>';
+  c.innerHTML = html;
+}
+
+function addKey() {
+  var key = prompt('Paste your Gemini API key:\nDán API key Gemini của bạn:');
+  if (key && key.trim()) {
+    S.keys.push(key.trim());
+    saveKeys();
+    nav('settings');
+  }
+}
+
+function removeKey(i) {
+  if (confirm('Remove this API key?')) {
+    S.keys.splice(i, 1);
+    if (S.activeKey && !S.keys.includes(S.activeKey)) S.activeKey = S.keys[0] || '';
+    saveKeys();
+    nav('settings');
+  }
+}
+
+function updateKey(i, val) {
+  S.keys[i] = val.trim();
+  saveKeys();
+}
+
+function saveKeys() {
+  localStorage.setItem('cb_apikeys', JSON.stringify(S.keys));
+  var sel = document.getElementById('sActiveKey');
+  if (sel && sel.value) {
+    S.activeKey = sel.value;
+    localStorage.setItem('cb_activekey', S.activeKey);
+  }
+  buildSidebar();
+}
+
+function exportData() {
+  var data = { keys: S.keys, activeKey: S.activeKey, imp: S.imp, questions: QB, units: U };
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'medstudy_backup_' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData() {
+  document.getElementById('importFileInput').click();
+}
+
+function handleImportData(files) {
+  var f = files[0];
+  if (!f) return;
+  var r = new FileReader();
+  r.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (data.keys) S.keys = data.keys;
+      if (data.activeKey) S.activeKey = data.activeKey;
+      if (data.imp) S.imp = data.imp;
+      if (data.questions) {
+        data.questions.forEach(function(q) {
+          if (!QB.find(function(x) { return x.id === q.id; })) QB.push(q);
+        });
+      }
+      saveKeys();
+      localStorage.setItem('cb_apikeys', JSON.stringify(S.keys));
+      localStorage.setItem('cb_activekey', S.activeKey);
+      alert('Data imported successfully!');
+      nav('settings');
+    } catch (err) {
+      alert('Invalid file: ' + err.message);
+    }
+  };
+  r.readAsText(f);
+}
+
+function saveLocal() {
+  localStorage.setItem('cb_apikeys', JSON.stringify(S.keys));
+  localStorage.setItem('cb_activekey', S.activeKey);
+  localStorage.setItem('cb_imports', JSON.stringify(S.imp));
+}
+
+var TA = {msgs: [], sending: false};
+
+function toggleTA() {
+  var panel = document.getElementById('taPanel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open') && TA.msgs.length === 0) {
+    TA.msgs.push({role:'bot', text:'Xin chào! Mình là <strong>Teaching Assistant</strong> của MedStudy. Bạn có thể hỏi mình bất cứ thắc mắc nào về nội dung bài học hoặc kiến thức sinh học. Mình sẽ trả lời bằng cả tiếng Anh và tiếng Việt! 🎓'});
+    renderTAMessages();
+    document.getElementById('taInput').focus();
+  }
+}
+
+function closeTA() {
+  document.getElementById('taPanel').classList.remove('open');
+}
+
+function renderTAMessages() {
+  var el = document.getElementById('taMsgs');
+  if (!el) return;
+  el.innerHTML = TA.msgs.map(function(m) {
+    return '<div class="ta-msg ' + m.role + '">' + m.text + '</div>';
+  }).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+function showTATyping() {
+  var el = document.getElementById('taMsgs');
+  var div = document.createElement('div');
+  div.className = 'ta-typing';
+  div.id = 'taTyping';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+
+function hideTATyping() {
+  var el = document.getElementById('taTyping');
+  if (el) el.remove();
+}
+
+async function sendTAMessage() {
+  var input = document.getElementById('taInput');
+  var text = input.value.trim();
+  if (!text || TA.sending) return;
+  if (S.keys.length === 0) {
+    alert('Please add a Gemini API key in Settings first!');
+    return;
+  }
+  input.value = '';
+  TA.msgs.push({role:'user', text: text});
+  renderTAMessages();
+  TA.sending = true;
+  document.getElementById('taSend').disabled = true;
+  showTATyping();
+
+  var context = buildTAContext();
+  var apiKey = S.activeKey || S.keys[0];
+  var chatHistory = TA.msgs.slice(-10).map(function(m) {
+    return (m.role === 'user' ? 'Student: ' : 'Assistant: ') + m.text.replace(/<[^>]*>/g, '');
+  }).join('\n');
+
+  var prompt = 'You are a friendly, knowledgeable Teaching Assistant for MedStudy (Bilingual Medical Lecture Platform). Answer the student\'s question in a helpful, clear way. Use both English and Vietnamese in your response (English first, then Vietnamese translation). Keep responses concise but thorough. Use HTML formatting for emphasis: <strong>bold</strong>, <em>italic</em>, <span class="kt">key terms</span>, <div class="fb">formulas</div>.\n\nCourse content context:\n' + context + '\n\nRecent conversation:\n' + chatHistory + '\n\nAnswer the student\'s latest question. Be accurate, educational, and encouraging.';
+
+  try {
+    var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 2048 } })
+    });
+    var data = await resp.json();
+    if (data.error) throw new Error(data.error.message);
+    var reply = data.candidates[0].content.parts[0].text;
+    reply = reply.replace(/```html\n?/g, '').replace(/```\n?/g, '').trim();
+    TA.msgs.push({role:'bot', text: reply});
+  } catch (err) {
+    var errMsg = err.message || 'Unknown error';
+    if (errMsg.includes('API key')) errMsg = 'Invalid API key. Please check in Settings.';
+    TA.msgs.push({role:'bot', text: '<strong style="color:var(--er)">Lỗi / Error:</strong> ' + errMsg + '<br><br>Vui lòng kiểm tra API key trong Settings. / Please check API key in Settings.'});
+  }
+
+  hideTATyping();
+  renderTAMessages();
+  TA.sending = false;
+  document.getElementById('taSend').disabled = false;
+}
+
+function buildTAContext() {
+  var ctx = '';
+  U.forEach(function(u) {
+    if (u.ch) {
+      u.ch.forEach(function(ch) {
+        ctx += '\n--- ' + ch.t + ' (' + ch.tv + ') ---';
+        ch.sec.forEach(function(s) {
+          var plainEn = s.en.replace(/<[^>]*>/g, '').substring(0, 500);
+          var plainVi = s.vi.replace(/<[^>]*>/g, '').substring(0, 300);
+          ctx += '\n' + s.t + ': ' + plainEn;
+          ctx += '\n(' + s.tv + ': ' + plainVi + ')';
+        });
+      });
+    }
+  });
+  S.imp.forEach(function(d) {
+    if (d.content) {
+      ctx += '\n--- Imported: ' + d.title + ' ---';
+      ctx += '\n' + d.content.replace(/<[^>]*>/g, '').substring(0, 2000);
+    }
+    if (d.generatedContent) {
+      ctx += '\n--- Generated: ' + d.title + ' ---';
+      ctx += '\n' + d.generatedContent.replace(/<[^>]*>/g, '').substring(0, 2000);
+    }
+  });
+  return ctx.substring(0, 8000);
+}
+
+function handleTAKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendTAMessage();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var savedImp = localStorage.getItem('cb_imports');
+  if (savedImp) {
+    try { S.imp = JSON.parse(savedImp); } catch(e) {}
+  }
+  nav('dashboard');
+});
+</script>
+
+<button class="ta-fab" id="taFab" onclick="toggleTA()" title="Teaching Assistant"><i class="fas fa-graduation-cap"></i></button>
+<div class="ta-panel" id="taPanel">
+  <div class="ta-header">
+    <div class="ta-avatar"><i class="fas fa-graduation-cap"></i></div>
+    <div class="ta-info"><h4>Teaching Assistant</h4><p>AI-powered medical tutor · Trợ lý AI dạy Y khoa</p></div>
+    <button class="ta-close" onclick="closeTA()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="ta-messages" id="taMsgs"></div>
+  <div class="ta-input">
+    <input type="text" id="taInput" placeholder="Hỏi Teaching Assistant..." onkeydown="handleTAKey(event)">
+    <button id="taSend" onclick="sendTAMessage()"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+</body>
+</html>

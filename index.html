@@ -143,12 +143,18 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .tab button{flex:1;padding:9px 14px;border-radius:var(--r1);border:none;background:transparent;color:var(--t2);font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--tr)}
 .tab button.on{background:var(--ac1);color:#fff}
 .tab button:hover:not(.on){background:var(--bg4)}
-.apikey-row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
-.apikey-row input{flex:1}
-.apikey-row .btn-del{background:var(--er);color:#fff;border:none;border-radius:var(--r1);width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:var(--tr);flex-shrink:0}
-.apikey-row .btn-del:hover{opacity:.8}
-.addkey-btn{background:var(--bg3);border:1px dashed var(--br2);border-radius:var(--r2);padding:10px 16px;color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:600;transition:var(--tr);width:100%;justify-content:center;margin-bottom:16px}
+.apikey-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;background:var(--bg3);border:1px solid var(--br1);border-radius:var(--r2);padding:4px 4px 4px 14px;transition:var(--tr)}
+.apikey-row:hover{border-color:var(--br2)}
+.apikey-row .key-index{font-size:.7rem;font-weight:700;color:var(--ac1);background:rgba(59,130,246,.12);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.apikey-row .key-display{flex:1;font-family:'Inter',monospace;font-size:.82rem;color:var(--t2);letter-spacing:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:all}
+.apikey-row .btn-toggle{background:none;border:none;color:var(--t3);cursor:pointer;padding:6px;border-radius:var(--r1);transition:var(--tr);display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex-shrink:0}
+.apikey-row .btn-toggle:hover{color:var(--t1);background:rgba(148,163,184,.08)}
+.apikey-row .btn-del{background:rgba(239,68,68,.1);color:var(--er);border:none;border-radius:var(--r1);width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:var(--tr);flex-shrink:0}
+.apikey-row .btn-del:hover{background:rgba(239,68,68,.2)}
+.addkey-btn{background:var(--bg3);border:1px dashed var(--br2);border-radius:var(--r2);padding:10px 16px;color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:600;transition:var(--tr);width:100%;justify-content:center;margin-bottom:10px}
 .addkey-btn:hover{border-color:var(--ac1);color:var(--ac1);background:rgba(59,130,246,.05)}
+.import-keys-btn{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(6,182,212,.08));border:1px solid rgba(16,185,129,.25);border-radius:var(--r2);padding:10px 16px;color:var(--ac4);cursor:pointer;display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:600;transition:var(--tr);width:100%;justify-content:center;margin-bottom:16px}
+.import-keys-btn:hover{border-color:var(--ac4);background:rgba(16,185,129,.12)}
 .gen-status{padding:12px 16px;border-radius:var(--r2);margin-bottom:14px;font-size:.82rem;display:none}
 .gen-status.ok{display:block;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--ac4)}
 .gen-status.err{display:block;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--er)}
@@ -176,6 +182,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .ta-typing span:nth-child(2){animation-delay:.2s}
 .ta-typing span:nth-child(3){animation-delay:.4s}
 @keyframes taDot{0%,80%,100%{opacity:.3}40%{opacity:1}}
+@keyframes fadeInOut{0%{opacity:0;transform:translateY(-10px)}15%{opacity:1;transform:translateY(0)}85%{opacity:1}100%{opacity:0}}
 .ta-input{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--br1);background:var(--bg2)}
 .ta-input input{flex:1;background:var(--bg3);border:1px solid var(--br2);color:var(--t1);padding:10px 14px;border-radius:var(--r1);font-family:inherit;font-size:.82rem;transition:var(--tr)}
 .ta-input input:focus{outline:none;border-color:var(--ac1)}
@@ -1086,22 +1093,29 @@ function rSettings(c, t) {
   html += '<div class="fg"><label>API Keys</label></div>';
   html += '<div id="keyList">';
   S.keys.forEach(function(k, i) {
+    var masked = k.substring(0, 8) + '••••••••' + k.substring(k.length - 4);
     html += '<div class="apikey-row">';
-    html += '<input type="password" value="' + k + '" data-idx="' + i + '" onchange="updateKey(' + i + ', this.value)" placeholder="Paste Gemini API key...">';
-    html += '<button class="btn-del" onclick="removeKey(' + i + ')"><i class="fas fa-trash"></i></button>';
+    html += '<span class="key-index">' + (i + 1) + '</span>';
+    html += '<span class="key-display" id="keyDisplay' + i + '" data-key="' + k + '" data-masked="1" title="Click eye to reveal">' + masked + '</span>';
+    html += '<button class="btn-toggle" onclick="toggleKeyVisibility(' + i + ')" title="Show/Hide"><i class="fas fa-eye"></i></button>';
+    html += '<button class="btn-toggle" onclick="copyKey(' + i + ')" title="Copy"><i class="fas fa-copy"></i></button>';
+    html += '<button class="btn-del" onclick="removeKey(' + i + ')" title="Remove"><i class="fas fa-trash"></i></button>';
     html += '</div>';
   });
   html += '</div>';
 
   html += '<div class="addkey-btn" onclick="addKey()"><i class="fas fa-plus"></i> Add API Key / Thêm API Key</div>';
+  html += '<div class="import-keys-btn" onclick="importKeysFromTxt()"><i class="fas fa-file-import"></i> Import Keys from TXT / Nhập Keys từ file TXT</div>';
+  html += '<input type="file" id="keysFileInput" style="display:none" accept=".txt" onchange="handleImportKeys(this.files)">';
+
 
   html += '<div style="padding:14px;background:var(--bg3);border-radius:var(--r2);margin-bottom:16px">';
   html += '<p style="font-size:.8rem;color:var(--t2);line-height:1.7">';
   html += '<strong style="color:var(--t1)">Hướng dẫn:</strong><br>';
   html += '1. Truy cập <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--ac1)">Google AI Studio</a> để lấy API key miễn phí<br>';
-  html += '2. Nhấn "+" để thêm key mới<br>';
-  html += '3. Chọn key active từ dropdown<br>';
-  html += '4. Bạn có thể thêm nhiều key dự phòng — khi key chính hết hạn, hệ thống sẽ thử key tiếp theo</p>';
+  html += '2. Nhấn "+" để thêm key mới hoặc "Import Keys from TXT" để nhập hàng loạt<br>';
+  html += '3. File TXT mỗi key trên 1 dòng, key tự động lọc trùng<br>';
+  html += '4. Chọn key active từ dropdown — key dự phòng tự chuyển khi key chính hết hạn</p>';
   html += '</div>';
 
   html += '<div style="padding:14px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:var(--r2);margin-bottom:16px">';
@@ -1127,6 +1141,76 @@ function addKey() {
     saveKeys();
     nav('settings');
   }
+}
+
+function toggleKeyVisibility(i) {
+  var el = document.getElementById('keyDisplay' + i);
+  var icon = el.parentElement.querySelector('.btn-toggle i');
+  var k = el.getAttribute('data-key');
+  if (el.getAttribute('data-masked') === '1') {
+    el.textContent = k;
+    el.setAttribute('data-masked', '0');
+    icon.className = 'fas fa-eye-slash';
+    el.style.color = 'var(--t1)';
+  } else {
+    var masked = k.substring(0, 8) + '••••••••' + k.substring(k.length - 4);
+    el.textContent = masked;
+    el.setAttribute('data-masked', '1');
+    icon.className = 'fas fa-eye';
+    el.style.color = '';
+  }
+}
+
+function copyKey(i) {
+  var k = S.keys[i];
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(k).then(function() { showToast('Key copied!'); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = k;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Key copied!');
+  }
+}
+
+function showToast(msg) {
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--ac4);color:#fff;padding:10px 20px;border-radius:var(--r2);font-size:.85rem;font-weight:600;z-index:9999;animation:fadeInOut 2s forwards';
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 2000);
+}
+
+function importKeysFromTxt() {
+  document.getElementById('keysFileInput').click();
+}
+
+function handleImportKeys(files) {
+  var f = files[0];
+  if (!f) return;
+  var r = new FileReader();
+  r.onload = function(e) {
+    var lines = e.target.result.split(/\r?\n/);
+    var added = 0;
+    lines.forEach(function(line) {
+      var k = line.trim();
+      if (k && k.length > 10 && !S.keys.includes(k)) {
+        S.keys.push(k);
+        added++;
+      }
+    });
+    if (added > 0) {
+      saveKeys();
+      nav('settings');
+      showToast(added + ' key(s) imported!');
+    } else {
+      showToast('No new keys found');
+    }
+  };
+  r.readAsText(f);
 }
 
 function removeKey(i) {

@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="author" content="Hiển The Doctor">
 <meta name="description" content="MedStudy — Bilingual Medical Lecture Platform created by Hiển The Doctor">
 <title>MedStudy — Bilingual Medical Lecture Platform</title>
@@ -145,8 +148,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .tab button:hover:not(.on){background:var(--bg4)}
 .apikey-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;background:var(--bg3);border:1px solid var(--br1);border-radius:var(--r2);padding:4px 4px 4px 14px;transition:var(--tr)}
 .apikey-row:hover{border-color:var(--br2)}
+.apikey-row input[type="password"],.apikey-row input[type="text"]{display:none!important}
 .apikey-row .key-index{font-size:.7rem;font-weight:700;color:var(--ac1);background:rgba(59,130,246,.12);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.apikey-row .key-display{flex:1;font-family:'Inter',monospace;font-size:.82rem;color:var(--t2);letter-spacing:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:all}
+.apikey-row .key-display{flex:1;font-family:'Inter',monospace;font-size:.82rem;color:var(--t2);letter-spacing:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:all;padding:8px 0}
 .apikey-row .btn-toggle{background:none;border:none;color:var(--t3);cursor:pointer;padding:6px;border-radius:var(--r1);transition:var(--tr);display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex-shrink:0}
 .apikey-row .btn-toggle:hover{color:var(--t1);background:rgba(148,163,184,.08)}
 .apikey-row .btn-del{background:rgba(239,68,68,.1);color:var(--er);border:none;border-radius:var(--r1);width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:var(--tr);flex-shrink:0}

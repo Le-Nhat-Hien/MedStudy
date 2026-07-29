@@ -407,7 +407,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 </div>
 
 <script>
-var S = { pg: 'dashboard', imp: [], fi: 0, ff: false, keys: JSON.parse(localStorage.getItem('cb_apikeys') || '[]'), activeKey: localStorage.getItem('cb_activekey') || '', expNav: {} };
+var S = { pg: 'dashboard', imp: [], refs: JSON.parse(localStorage.getItem('cb_references') || '[]'), fi: 0, ff: false, keys: JSON.parse(localStorage.getItem('cb_apikeys') || '[]'), activeKey: localStorage.getItem('cb_activekey') || '', expNav: {} };
 
 var BOOKS = [
   { id: 'campbell', name: 'Campbell Biology', icon: 'fas fa-dna' }
@@ -550,6 +550,7 @@ function buildSidebar() {
   html += '<div class="nsec"><div class="nst">Study Tools</div>';
   html += '<div class="ni' + (S.pg === 'quiz' ? ' on' : '') + '" onclick="nav(\'quiz\')"><i class="fas fa-question-circle"></i> Question Bank</div>';
   html += '<div class="ni' + (S.pg === 'flash' ? ' on' : '') + '" onclick="nav(\'flash\')"><i class="fas fa-clone"></i> Flashcards</div>';
+  html += '<div class="ni' + (S.pg === 'reference' ? ' on' : '') + '" onclick="nav(\'reference\')"><i class="fas fa-scroll"></i> Exam References' + (S.refs.length > 0 ? '<span class="bg">' + S.refs.length + '</span>' : '') + '</div>';
   html += '<div class="ni' + (S.pg === 'assistant' ? ' on' : '') + '" onclick="nav(\'assistant\')"><i class="fas fa-robot"></i> AI Assistant</div>';
   html += '<div class="ni' + (S.pg === 'gen' ? ' on' : '') + '" onclick="nav(\'gen\')"><i class="fas fa-robot"></i> AI Generator</div>';
   html += '<div class="ni' + (S.pg === 'import' ? ' on' : '') + '" onclick="nav(\'import\')"><i class="fas fa-file-import"></i> Import</div>';
@@ -566,7 +567,7 @@ function toggleSB(el, key) {
 
 function nav(p) {
   S.pg = p;
-  if (p && !p.startsWith('imp-') && p !== 'dashboard' && p !== 'lectures' && p !== 'quiz' && p !== 'flash' && p !== 'gen' && p !== 'import' && p !== 'settings' && p !== 'assistant') {
+  if (p && !p.startsWith('imp-') && p !== 'dashboard' && p !== 'lectures' && p !== 'quiz' && p !== 'flash' && p !== 'gen' && p !== 'import' && p !== 'settings' && p !== 'assistant' && p !== 'reference') {
     var parts = p.split(':');
     BOOKS.forEach(function(b) { S.expNav['b:' + b.id] = true; });
     var u = U.find(function(x) { return x.id === parts[0]; });
@@ -583,6 +584,7 @@ function nav(p) {
     case 'lectures': rUnits(c, t); break;
     case 'quiz': rQuiz(c, t); break;
     case 'flash': rFlash(c, t); break;
+    case 'reference': rReference(c, t); break;
     case 'gen': rGen(c, t); break;
     case 'import': rImp(c, t); break;
     case 'settings': rSettings(c, t); break;
@@ -613,7 +615,7 @@ function rDash(c, t) {
     + '<div class="sc"><div class="si"><i class="fas fa-book-open"></i></div><div class="sv">' + U.length + '</div><div class="sl">Units / Đơn vị học</div></div>'
     + '<div class="sc"><div class="si"><i class="fas fa-layer-group"></i></div><div class="sv">' + tc + '</div><div class="sl">Sections / Mục nội dung</div></div>'
     + '<div class="sc"><div class="si"><i class="fas fa-question-circle"></i></div><div class="sv">' + tq + '</div><div class="sl">Questions / Câu hỏi</div></div>'
-    + '<div class="sc"><div class="si"><i class="fas fa-file-import"></i></div><div class="sv">' + S.imp.length + '</div><div class="sl">Imported Docs</div></div>'
+    + '<div class="sc" onclick="nav(\'reference\')" style="cursor:pointer"><div class="si"><i class="fas fa-scroll"></i></div><div class="sv">' + S.refs.length + '</div><div class="sl">Exam References / Tham khảo</div></div>'
     + '</div>'
     + '<h2 style="font-size:1.15rem;font-weight:700;margin-bottom:18px">Units — MedStudy</h2>'
     + '<div class="ugrid">' + U.map(function(u) {
@@ -861,6 +863,205 @@ function flip() { S.ff = !S.ff; document.getElementById('flc').classList.toggle(
 function nFlash() { S.fi = (S.fi + 1) % QB.length; rFlash(document.getElementById('mcon'), document.getElementById('ptitle')); }
 function pFlash() { S.fi = (S.fi - 1 + QB.length) % QB.length; rFlash(document.getElementById('mcon'), document.getElementById('ptitle')); }
 
+function rReference(c, t) {
+  t.textContent = 'Exam References & Syllabus Hub';
+  var activeCount = S.refs.filter(function(r) { return r.active !== false; }).length;
+  var html = '<div class="lc" style="max-width:1000px;margin:0 auto">';
+
+  html += '<div style="background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(99,102,241,.1));border:1px solid rgba(59,130,246,.2);border-radius:var(--r3);padding:24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">';
+  html += '<div>';
+  html += '<h2 style="font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#0ea5e9,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent"><i class="fas fa-graduation-cap" style="-webkit-text-fill-color:#0ea5e9"></i> Kho Tài liệu Tham khảo Đại học</h2>';
+  html += '<p style="color:var(--t2);font-size:.84rem;margin-top:4px">Upload đề cương, cheat sheet, đề thi mẫu của trường để AI học phong cách ra đề & dự đoán bài kiểm tra.</p>';
+  html += '</div>';
+  html += '<div style="display:flex;gap:10px;align-items:center">';
+  html += '<span class="tag tagb" style="padding:6px 12px;font-size:.78rem"><i class="fas fa-file-contract"></i> Tổng: ' + S.refs.length + ' tài liệu</span>';
+  html += '<span class="tag tagg" style="padding:6px 12px;font-size:.78rem"><i class="fas fa-check-circle"></i> Bật cho AI: ' + activeCount + '</span>';
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="gc" style="max-width:100%;margin-bottom:28px"><div class="gf">';
+  html += '<h3 style="font-size:1.05rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px"><i class="fas fa-cloud-upload-alt" style="color:var(--ac1)"></i> Tải lên / Thêm Tài liệu Tham khảo Mới</h3>';
+
+  html += '<div class="drop" id="refDrop" onclick="document.getElementById(\'refFileInput\').click()" ondragover="event.preventDefault();this.classList.add(\'dov\')" ondragleave="this.classList.remove(\'dov\')" ondrop="event.preventDefault();handleRefDrop(event)" style="padding:30px 20px;margin-bottom:18px">';
+  html += '<i class="fas fa-file-upload"></i>';
+  html += '<h4 style="font-size:.95rem;font-weight:700;margin-bottom:4px">Kéo thả file hoặc Click để chọn (.md, .txt)</h4>';
+  html += '<p style="font-size:.78rem;color:var(--t3)">Tự động nhận diện tên file & đọc nội dung đề cương, đề thi</p>';
+  html += '<input type="file" id="refFileInput" style="display:none" accept=".md,.txt" multiple onchange="handleRefFiles(this.files)"></div>';
+
+  html += '<div class="fm">';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
+  html += '<div class="fg"><label>Tên tài liệu / Tiêu đề</label><input type="text" id="refTitle" placeholder="e.g., Đề thi Sinh học 1 - ĐHYD 2025"></div>';
+  html += '<div class="fg"><label>Loại tài liệu (Category)</label><select id="refType"><option value="exam">📝 Đề thi mẫu / Đề thi cũ (Past Exam)</option><option value="syllabus">📋 Đề cương môn học (Syllabus/Outline)</option><option value="cheatsheet">💡 Cheat Sheet / Tóm tắt công thức</option><option value="style">🎯 Dạng câu hỏi / Phong cách trường</option></select></div>';
+  html += '</div>';
+
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
+  html += '<div class="fg"><label>Môn học (Subject)</label><input type="text" id="refSubject" placeholder="e.g., Sinh học đại cương, Hóa sinh..."></div>';
+  html += '<div class="fg"><label>Trường đại học (School/University)</label><input type="text" id="refSchool" placeholder="e.g., ĐH Y Dược TPHCM, ĐHQG..."></div>';
+  html += '</div>';
+
+  html += '<div class="fg"><label>Nội dung tài liệu (Markdown / Text)</label><textarea id="refContent" placeholder="Dán đề cương, dạng câu hỏi, cheat sheet hoặc nội dung tham khảo tại đây..."></textarea></div>';
+
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">';
+  html += '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.82rem;color:var(--t2)"><input type="checkbox" id="refActive" checked style="width:auto"> Kích hoạt cho AI đọc (AI Active Context)</label>';
+  html += '<button class="btn bp" onclick="processAddRef()"><i class="fas fa-plus"></i> Lưu Tài liệu Tham khảo</button>';
+  html += '</div>';
+  html += '</div></div></div>';
+
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">';
+  html += '<h3 style="font-size:1.1rem;font-weight:800"><i class="fas fa-folder-open" style="color:var(--ac3)"></i> Danh sách Tài liệu Tham khảo (' + S.refs.length + ')</h3>';
+  html += '<div style="display:flex;gap:10px">';
+  html += '<select id="refFilterType" onchange="renderRefList()" style="background:var(--bg2);border:1px solid var(--br2);color:var(--t1);padding:6px 12px;border-radius:var(--r1);font-size:.8rem">';
+  html += '<option value="all">Tất cả loại tài liệu</option><option value="exam">Đề thi mẫu</option><option value="syllabus">Đề cương môn học</option><option value="cheatsheet">Cheat Sheet</option><option value="style">Phong cách ra đề</option>';
+  html += '</select>';
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div id="refList"></div>';
+  html += '</div>';
+
+  c.innerHTML = html;
+  renderRefList();
+}
+
+function renderRefList() {
+  var el = document.getElementById('refList');
+  if (!el) return;
+  var filterType = document.getElementById('refFilterType') ? document.getElementById('refFilterType').value : 'all';
+  var refs = S.refs.filter(function(r) {
+    return filterType === 'all' || r.type === filterType;
+  });
+
+  if (refs.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:40px;background:var(--bg2);border:1px dashed var(--br2);border-radius:var(--r3);color:var(--t3)"><i class="fas fa-folder-open" style="font-size:2.2rem;margin-bottom:12px;display:block"></i>Chưa có tài liệu tham khảo nào trong danh mục này.<br><small>Tải lên hoặc thêm thủ công ở form phía trên.</small></div>';
+    return;
+  }
+
+  var typeBadges = {
+    exam: { label: '📝 Đề thi mẫu', class: 'tagb' },
+    syllabus: { label: '📋 Đề cương', class: 'tagg' },
+    cheatsheet: { label: '💡 Cheat Sheet', class: 'taga' },
+    style: { label: '🎯 Phong cách ra đề', class: 'tagb' }
+  };
+
+  var html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px">';
+  refs.forEach(function(r) {
+    var origIdx = S.refs.indexOf(r);
+    var badge = typeBadges[r.type] || { label: r.type || 'Tham khảo', class: 'tagb' };
+    var isActive = r.active !== false;
+
+    html += '<div class="sc" style="display:flex;flex-direction:column;justify-content:space-between;padding:18px;background:var(--bg2);border:1px solid ' + (isActive ? 'var(--br2)' : 'var(--br1)') + ';opacity:' + (isActive ? '1' : '.65') + '">';
+    html += '<div>';
+    html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">';
+    html += '<span class="tag ' + badge.class + '">' + badge.label + '</span>';
+    html += '<label style="display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--t3);cursor:pointer" title="Bật/Tắt sử dụng trong AI context">';
+    html += '<input type="checkbox" ' + (isActive ? 'checked' : '') + ' onchange="toggleRefActive(' + origIdx + ')"> AI Context';
+    html += '</label>';
+    html += '</div>';
+
+    html += '<h4 style="font-size:.95rem;font-weight:700;line-height:1.4;margin-bottom:6px;color:var(--t1)">' + r.title + '</h4>';
+    if (r.subject || r.school) {
+      html += '<div style="font-size:.75rem;color:var(--ac1);font-weight:600;margin-bottom:8px"><i class="fas fa-university"></i> ' + (r.school || 'Đại học') + (r.subject ? ' &bull; ' + r.subject : '') + '</div>';
+    }
+    var snippet = r.content ? r.content.replace(/<[^>]*>/g, '').substring(0, 140) + '...' : 'Không có nội dung';
+    html += '<p style="font-size:.78rem;color:var(--t2);line-height:1.5;margin-bottom:14px">' + snippet + '</p>';
+    html += '</div>';
+
+    html += '<div style="display:flex;gap:8px;padding-top:10px;border-top:1px solid var(--br1);align-items:center;justify-content:space-between">';
+    html += '<small style="font-size:.65rem;color:var(--t3)">' + (r.date ? new Date(r.date).toLocaleDateString() : '') + '</small>';
+    html += '<div style="display:flex;gap:6px">';
+    html += '<button class="btn bs sm" onclick="viewRefDetail(' + origIdx + ')" title="Xem chi tiết"><i class="fas fa-eye"></i> View</button>';
+    html += '<button class="btn bs sm" onclick="deleteRef(' + origIdx + ')" style="color:var(--er)" title="Xóa"><i class="fas fa-trash"></i></button>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '</div>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function toggleRefActive(idx) {
+  if (S.refs[idx]) {
+    S.refs[idx].active = !S.refs[idx].active;
+    saveLocal();
+    renderRefList();
+  }
+}
+
+function deleteRef(idx) {
+  if (confirm('Bạn có chắc muốn xóa tài liệu tham khảo này?')) {
+    S.refs.splice(idx, 1);
+    saveLocal();
+    rReference(document.getElementById('mcon'), document.getElementById('ptitle'));
+  }
+}
+
+function viewRefDetail(idx) {
+  var r = S.refs[idx];
+  if (!r) return;
+  var c = document.getElementById('mcon');
+  var t = document.getElementById('ptitle');
+  t.textContent = r.title;
+
+  var html = '<div class="lc" style="max-width:850px;margin:0 auto">';
+  html += '<div class="lnav"><button class="btn bs sm" onclick="nav(\'reference\')"><i class="fas fa-arrow-left"></i> Trở về Danh sách Tham khảo</button></div>';
+  html += '<div style="background:var(--bg2);border:1px solid var(--br1);border-radius:var(--r3);padding:28px">';
+  html += '<div style="display:flex;gap:8px;margin-bottom:12px">';
+  html += '<span class="tag tagb">' + (r.type || 'Exam Reference').toUpperCase() + '</span>';
+  if (r.school) html += '<span class="tag tagg">' + r.school + '</span>';
+  if (r.subject) html += '<span class="tag taga">' + r.subject + '</span>';
+  html += '</div>';
+  html += '<h1 style="font-size:1.5rem;font-weight:900;margin-bottom:14px">' + r.title + '</h1>';
+  html += '<div class="ct" style="font-size:.9rem;line-height:1.8;border-top:1px solid var(--br1);padding-top:18px">' + simpleMd(r.content || '') + '</div>';
+  html += '</div></div>';
+  c.innerHTML = html;
+}
+
+function handleRefDrop(e) { handleRefFiles(e.dataTransfer.files); }
+
+function handleRefFiles(files) {
+  Array.from(files).forEach(function(f) {
+    var r = new FileReader();
+    r.onload = function(e) {
+      document.getElementById('refContent').value = e.target.result;
+      if (!document.getElementById('refTitle').value) {
+        document.getElementById('refTitle').value = f.name.replace(/\.[^.]+$/, '');
+      }
+    };
+    r.readAsText(f);
+  });
+}
+
+function processAddRef() {
+  var title = document.getElementById('refTitle').value.trim();
+  var type = document.getElementById('refType').value;
+  var subject = document.getElementById('refSubject').value.trim();
+  var school = document.getElementById('refSchool').value.trim();
+  var content = document.getElementById('refContent').value.trim();
+  var active = document.getElementById('refActive').checked;
+
+  if (!title || !content) {
+    alert('Vui lòng nhập Tiêu đề và Nội dung tài liệu tham khảo!');
+    return;
+  }
+
+  var item = {
+    id: 'ref-' + Date.now(),
+    title: title,
+    type: type,
+    subject: subject,
+    school: school,
+    content: content,
+    active: active,
+    date: new Date().toISOString()
+  };
+
+  S.refs.push(item);
+  saveLocal();
+  alert('Đã thêm tài liệu tham khảo "' + title + '" thành công!');
+  rReference(document.getElementById('mcon'), document.getElementById('ptitle'));
+}
+
 function rGen(c, t) {
   t.textContent = 'AI Generator';
   var hasKey = S.keys.length > 0 && S.activeKey;
@@ -870,13 +1071,20 @@ function rGen(c, t) {
   if (!hasKey) {
     html += '<div class="gen-status warn"><i class="fas fa-exclamation-triangle"></i> No API key configured. Go to <a href="#" onclick="nav(\'settings\');return false" style="color:var(--ac5)">Settings</a> to add your Gemini API key.</div>';
   }
-  html += '<div class="fg"><label>Mode / Chế độ</label><select id="gMode"><option value="questions">Generate Questions / Tạo Câu hỏi</option><option value="lecture">Generate Lecture Notes / Tạo Bài giảng</option></select></div>';
+  html += '<div class="fg"><label>Mode / Chế độ</label><select id="gMode"><option value="questions">Generate Questions / Tạo Câu hỏi</option><option value="exam_predict">🎯 University Exam Predictor / Dự đoán Đề thi Trường</option><option value="lecture">Generate Lecture Notes / Tạo Bài giảng</option></select></div>';
+  html += '<div class="fg"><label>University Reference Context (Tài liệu Tham khảo)</label><select id="gRefSel"><option value="active">-- All Active University References (Tất cả tài liệu đang bật) --</option><option value="none">-- No University Reference --</option>';
+  if (S.refs && S.refs.length > 0) {
+    S.refs.forEach(function(r, i) {
+      html += '<option value="' + i + '">' + r.title + ' (' + (r.school || 'Tham khảo') + ')</option>';
+    });
+  }
+  html += '</select></div>';
   html += '<div class="fg"><label>Source / Nguồn</label><select id="gSrc"><option value="topic">By Topic / Theo Chủ đề</option><option value="document">From Imported Document / Từ Tài liệu</option></select></div>';
   html += '<div class="fg" id="gTopicFg"><label>Topic / Chủ đề</label><input type="text" id="gT" placeholder="e.g., Acid-Base Balance, Enzyme Kinetics..."></div>';
   html += '<div class="fg" id="gDocFg" style="display:none"><label>Select Document</label><select id="gDoc"><option value="">-- Select --</option></select></div>';
   html += '<div class="fg"><label>Number / Số lượng</label><select id="gC"><option value="5">5</option><option value="10" selected>10</option><option value="15">15</option></select></div>';
   html += '<div class="fg"><label>Difficulty / Độ khó</label><select id="gD"><option value="mixed">Mixed</option><option value="basic">Basic</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced / Clinical</option></select></div>';
-  html += '<div class="fg"><label>Reference Material (optional)</label><textarea id="gR" placeholder="Paste reference text for more accurate results..."></textarea></div>';
+  html += '<div class="fg"><label>Reference Material (optional)</label><textarea id="gR" placeholder="Paste additional notes or reference text..."></textarea></div>';
   html += '<button class="btn bp" onclick="genContent()"' + (hasKey ? '' : ' disabled style="opacity:.5;cursor:not-allowed"') + '><i class="fas fa-magic"></i> Generate</button>';
   html += '</div><div id="gO"></div></div>';
   c.innerHTML = html;
@@ -903,19 +1111,34 @@ async function genContent() {
   var count = parseInt(document.getElementById('gC').value);
   var diff = document.getElementById('gD').value;
   var ref = document.getElementById('gR').value.trim();
+  var gRefIdx = document.getElementById('gRefSel') ? document.getElementById('gRefSel').value : 'active';
 
   var content = '';
   if (src === 'document' && docIdx !== '') {
     content = S.imp[parseInt(docIdx)].content || '';
   }
-  if (!topic && !content) { alert('Please enter a topic or select a document'); return; }
+
+  var univRef = '';
+  if (gRefIdx === 'active') {
+    var activeRefs = S.refs.filter(function(r) { return r.active !== false; });
+    if (activeRefs.length > 0) {
+      univRef = activeRefs.map(function(r) {
+        return '[' + (r.type || 'Reference').toUpperCase() + ' - ' + (r.school || '') + ' ' + (r.subject || '') + ']\nTitle: ' + r.title + '\nContent:\n' + r.content.substring(0, 3000);
+      }).join('\n\n');
+    }
+  } else if (gRefIdx !== 'none' && S.refs[parseInt(gRefIdx)]) {
+    var selectedR = S.refs[parseInt(gRefIdx)];
+    univRef = '[' + (selectedR.type || 'Reference').toUpperCase() + ' - ' + (selectedR.school || '') + ' ' + (selectedR.subject || '') + ']\nTitle: ' + selectedR.title + '\nContent:\n' + selectedR.content.substring(0, 4000);
+  }
+
+  if (!topic && !content && !univRef) { alert('Please enter a topic, select a document, or use reference materials'); return; }
   if (S.keys.length === 0) { alert('Please add a Gemini API key in Settings first'); return; }
 
   var o = document.getElementById('gO');
-  o.innerHTML = '<div class="glo"><i class="fas fa-spinner"></i><p>Generating with Gemini... / Đang tạo...</p></div>';
+  o.innerHTML = '<div class="glo"><i class="fas fa-spinner"></i><p>Generating with Gemini... / Đang tạo nội dung...</p></div>';
 
   var apiKey = S.activeKey || S.keys[0];
-  var prompt = buildPrompt(mode, topic, content, count, diff, ref);
+  var prompt = buildPrompt(mode, topic, content, count, diff, ref, univRef);
 
   try {
     var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey, {
@@ -927,22 +1150,25 @@ async function genContent() {
     if (data.error) throw new Error(data.error.message);
     var text = data.candidates[0].content.parts[0].text;
     var parsed = parseGeminiResponse(text, mode);
-    if (mode === 'questions') renderGenQuestions(o, parsed, topic || 'Imported');
+    if (mode === 'questions' || mode === 'exam_predict') renderGenQuestions(o, parsed, topic || (mode === 'exam_predict' ? 'Đề thi Dự đoán Trường' : 'Imported'));
     else renderGenLecture(o, parsed, topic || 'Imported');
   } catch (err) {
     o.innerHTML = '<div class="gen-status err"><i class="fas fa-exclamation-circle"></i> Error: ' + err.message + '</div>';
   }
 }
 
-function buildPrompt(mode, topic, content, count, diff, ref) {
-  var ctx = content ? '\n\nReference content:\n' + content.substring(0, 6000) : '';
-  var refCtx = ref ? '\n\nAdditional reference:\n' + ref : '';
+function buildPrompt(mode, topic, content, count, diff, ref, univRef) {
+  var ctx = content ? '\n\nReference lecture content:\n' + content.substring(0, 6000) : '';
+  var refCtx = ref ? '\n\nAdditional notes:\n' + ref : '';
+  var univCtx = univRef ? '\n\n=== UNIVERSITY EXAM & SYLLABUS REFERENCE MATERIALS (STUDY & ANALYZE EXAM PATTERN) ===\n' + univRef : '';
   var diffMap = { basic: 'basic/foundational level', intermediate: 'intermediate level suitable for medical students', advanced: 'advanced/clinical level with medical applications', mixed: 'mixed difficulty levels' };
 
-  if (mode === 'questions') {
-    return 'Generate exactly ' + count + ' high-quality bilingual (English/Vietnamese) multiple-choice quiz questions about: ' + (topic || 'the provided content') + '.\nDifficulty: ' + diffMap[diff] + '.' + ctx + refCtx + '\n\nFor EACH question, return JSON array with objects having:\n- q: question in English\n- qv: question in Vietnamese\n- o: array of 4 options, each with {t: English text, tv: Vietnamese text, c: true/false}\n- ex: explanation in English\n- exv: explanation in Vietnamese\n- df: difficulty (basic/intermediate/advanced)\n\nIMPORTANT: Return ONLY valid JSON array, no markdown. Medical school quality questions.';
+  if (mode === 'exam_predict') {
+    return 'Act as a senior University Medical Professor & Exam Specialist. Analyze the provided University Exam & Syllabus Reference Materials below to understand the institution\'s exact question style, exam pattern, difficulty level, trick questions, and clinical reasoning depth.\n\nGenerate exactly ' + count + ' predicted high-quality bilingual (English/Vietnamese) university exam multiple-choice questions for: ' + (topic || 'the university course') + '.\n' + univCtx + ctx + refCtx + '\n\nFor EACH question, return JSON array with objects having:\n- q: question in English\n- qv: question in Vietnamese\n- o: array of 4 options, each with {t: English text, tv: Vietnamese text, c: true/false}\n- ex: explanation in English with reasoning\n- exv: explanation in Vietnamese\n- df: difficulty (basic/intermediate/advanced)\n\nIMPORTANT: Match the university\'s exact testing style and rigor. Return ONLY valid JSON array, no markdown.';
+  } else if (mode === 'questions') {
+    return 'Generate exactly ' + count + ' high-quality bilingual (English/Vietnamese) multiple-choice quiz questions about: ' + (topic || 'the provided content') + '.\nDifficulty: ' + diffMap[diff] + '.' + univCtx + ctx + refCtx + '\n\nFor EACH question, return JSON array with objects having:\n- q: question in English\n- qv: question in Vietnamese\n- o: array of 4 options, each with {t: English text, tv: Vietnamese text, c: true/false}\n- ex: explanation in English\n- exv: explanation in Vietnamese\n- df: difficulty (basic/intermediate/advanced)\n\nIMPORTANT: Return ONLY valid JSON array, no markdown. Medical school quality questions.';
   } else {
-    return 'Generate comprehensive bilingual (English/Vietnamese) lecture notes about: ' + (topic || 'the provided content') + '.\n' + ctx + refCtx + '\n\nReturn a JSON object with:\n- title: section title in English\n- titlev: section title in Vietnamese\n- sections: array of {heading: English heading, headingv: Vietnamese heading, content_en: HTML content in English with <strong>, <em>, <span class="kt"> for key terms, <div class="fb"> for formulas, <div class="cbx"><h4><i class="fas fa-heartbeat"></i> Clinical Relevance</h4><p>...</p></div> for clinical boxes, <div class="sbx"><h4><i class="fas fa-lightbulb"></i> Key Concept</h4><p>...</p></div> for key concepts. content_vi: same content in Vietnamese}\n\nIMPORTANT: Return ONLY valid JSON object, no markdown. Medical school quality lecture notes.';
+    return 'Generate comprehensive bilingual (English/Vietnamese) lecture notes about: ' + (topic || 'the provided content') + '.\n' + univCtx + ctx + refCtx + '\n\nReturn a JSON object with:\n- title: section title in English\n- titlev: section title in Vietnamese\n- sections: array of {heading: English heading, headingv: Vietnamese heading, content_en: HTML content in English with <strong>, <em>, <span class="kt"> for key terms, <div class="fb"> for formulas, <div class="cbx"><h4><i class="fas fa-heartbeat"></i> Clinical Relevance</h4><p>...</p></div> for clinical boxes, <div class="sbx"><h4><i class="fas fa-lightbulb"></i> Key Concept</h4><p>...</p></div> for key concepts. content_vi: same content in Vietnamese}\n\nIMPORTANT: Return ONLY valid JSON object, no markdown. Medical school quality lecture notes.';
   }
 }
 
@@ -1374,7 +1600,7 @@ function saveKeys() {
 }
 
 function exportData() {
-  var data = { keys: S.keys, activeKey: S.activeKey, imp: S.imp, questions: QB, units: U };
+  var data = { keys: S.keys, activeKey: S.activeKey, imp: S.imp, refs: S.refs, questions: QB, units: U };
   var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
@@ -1398,6 +1624,7 @@ function handleImportData(files) {
       if (data.keys) S.keys = data.keys;
       if (data.activeKey) S.activeKey = data.activeKey;
       if (data.imp) S.imp = data.imp;
+      if (data.refs) S.refs = data.refs;
       if (data.questions) {
         data.questions.forEach(function(q) {
           if (!QB.find(function(x) { return x.id === q.id; })) QB.push(q);
@@ -1406,6 +1633,8 @@ function handleImportData(files) {
       saveKeys();
       localStorage.setItem('cb_apikeys', JSON.stringify(S.keys));
       localStorage.setItem('cb_activekey', S.activeKey);
+      localStorage.setItem('cb_imports', JSON.stringify(S.imp));
+      localStorage.setItem('cb_references', JSON.stringify(S.refs));
       alert('Data imported successfully!');
       nav('settings');
     } catch (err) {
@@ -1419,6 +1648,7 @@ function saveLocal() {
   localStorage.setItem('cb_apikeys', JSON.stringify(S.keys));
   localStorage.setItem('cb_activekey', S.activeKey);
   localStorage.setItem('cb_imports', JSON.stringify(S.imp));
+  localStorage.setItem('cb_references', JSON.stringify(S.refs));
 }
 
 var TA = {msgs: [], sending: false};
@@ -1509,6 +1739,16 @@ async function sendTAMessage() {
 
 function buildTAContext() {
   var ctx = '';
+  if (S.refs && S.refs.length > 0) {
+    var activeRefs = S.refs.filter(function(r) { return r.active !== false; });
+    if (activeRefs.length > 0) {
+      ctx += '\n=== UNIVERSITY EXAM & SYLLABUS REFERENCE MATERIALS ===';
+      activeRefs.forEach(function(r) {
+        ctx += '\n--- [' + (r.type || 'Reference').toUpperCase() + '] ' + r.title + ' (' + (r.school || '') + ' ' + (r.subject || '') + ') ---';
+        ctx += '\n' + (r.content || '').substring(0, 2000);
+      });
+    }
+  }
   U.forEach(function(u) {
     if (u.ch) {
       u.ch.forEach(function(ch) {
@@ -1532,7 +1772,7 @@ function buildTAContext() {
       ctx += '\n' + d.generatedContent.replace(/<[^>]*>/g, '').substring(0, 2000);
     }
   });
-  return ctx.substring(0, 8000);
+  return ctx.substring(0, 9000);
 }
 
 function handleTAKey(e) {
@@ -1559,7 +1799,7 @@ function rAssistant(c, t) {
     html += '<div class="ai-welcome" id="aiWelcome">';
     html += '<div class="ai-welcome-grid">';
     html += '<div class="ai-sug-card" onclick="aiSuggest(\'Giải thích chi tiết về cấu trúc nguyên tử và các hạt cơ bản (proton, neutron, electron) cho sinh viên Y khoa\')"><div class="ai-sug-icon"><i class="fas fa-atom"></i></div><div><h4>Giải thích khái niệm</h4><p>Explain key concepts in detail · Giải thích chi tiết</p></div></div>';
-    html += '<div class="ai-sug-card" onclick="aiSuggest(\'Tạo 5 câu hỏi trắc nghiệm về liên kết hóa học (covalent, ionic, hydrogen bonds) với đáp án và giải thích\')"><div class="ai-sug-icon"><i class="fas fa-question-circle"></i></div><div><h4>Quiz me</h4><p>Generate practice questions · Tạo câu hỏi ôn tập</p></div></div>';
+    html += '<div class="ai-sug-card" onclick="aiSuggest(\'Dựa vào Đề cương và Đề thi mẫu trường tôi vừa up, tạo 5 câu hỏi trắc nghiệm ôn tập trọng tâm\')"><div class="ai-sug-icon"><i class="fas fa-question-circle"></i></div><div><h4>Dự đoán Đề thi Trường</h4><p>Predict exam questions · Tạo câu hỏi bám sát đề thi</p></div></div>';
     html += '<div class="ai-sug-card" onclick="aiSuggest(\'Tóm tắt ngắn gọn tất cả nội dung về Hóa học của Nước (Chapter 3) bao gồm các tính chất và ý nghĩa sinh học\')"><div class="ai-sug-icon"><i class="fas fa-file-alt"></i></div><div><h4>Tóm tắt bài</h4><p>Summarize lectures · Tóm tắt nội dung bài giảng</p></div></div>';
     html += '<div class="ai-sug-card" onclick="aiSuggest(\'So sánh sự khác biệt giữa liên kết cộng hóa trị cực và không cực, cho ví dụ cụ thể liên quan Y khoa\')"><div class="ai-sug-icon"><i class="fas fa-balance-scale"></i></div><div><h4>So sánh</h4><p>Compare concepts · So sánh các khái niệm</p></div></div>';
     html += '</div></div>';
@@ -1578,14 +1818,14 @@ function rAssistant(c, t) {
   // Bottom: chips + input
   html += '<div class="ai-bottom">';
   html += '<div class="ai-chips">';
+  html += '<div class="ai-chip" onclick="aiSuggest(\'Dự đoán 3 câu hỏi trắc nghiệm theo phong cách ra đề của trường tôi\')"><i class="fas fa-graduation-cap"></i> Dự đoán Đề thi Trường</div>';
   html += '<div class="ai-chip" onclick="aiSuggest(\'Giải thích khái niệm này đơn giản hơn\')"><i class="fas fa-lightbulb"></i> Giải thích đơn giản</div>';
-  html += '<div class="ai-chip" onclick="aiSuggest(\'Tạo 3 câu hỏi trắc nghiệm về bài học này\')"><i class="fas fa-pen"></i> Tạo Quiz</div>';
-  html += '<div class="ai-chip" onclick="aiSuggest(\'Tóm tắt bài học hiện tại bằng tiếng Việt\')"><i class="fas fa-compress-alt"></i> Tóm tắt</div>';
+  html += '<div class="ai-chip" onclick="aiSuggest(\'Tóm tắt bài học hiện tại theo chuẩn đề cương trường\')"><i class="fas fa-compress-alt"></i> Tóm tắt đề cương</div>';
   html += '<div class="ai-chip" onclick="aiSuggest(\'Cho ví dụ lâm sàng thực tế liên quan đến nội dung này\')"><i class="fas fa-heartbeat"></i> Ví dụ lâm sàng</div>';
-  html += '<div class="ai-chip" onclick="aiSuggest(\'Tạo flashcard cho các thuật ngữ quan trọng\')"><i class="fas fa-clone"></i> Flashcard</div>';
+  html += '<div class="ai-chip" onclick="aiSuggest(\'Tạo flashcard cho các thuật ngữ quan trọng trong cheat sheet\')"><i class="fas fa-clone"></i> Flashcard Cheat Sheet</div>';
   html += '</div>';
   html += '<div class="ai-input-wrap">';
-  html += '<textarea id="aiInput" rows="1" placeholder="Hỏi AI Assistant bất kỳ điều gì về Y khoa..." onkeydown="handleAIKey(event)" oninput="autoResizeAI(this)"></textarea>';
+  html += '<textarea id="aiInput" rows="1" placeholder="Hỏi AI Assistant bất kỳ điều gì hoặc yêu cầu dự đoán đề thi..." onkeydown="handleAIKey(event)" oninput="autoResizeAI(this)"></textarea>';
   html += '<button class="ai-send-btn" id="aiSendBtn" onclick="sendAssistantMsg()"><i class="fas fa-paper-plane"></i></button>';
   html += '</div>';
   html += '</div>';
@@ -1593,13 +1833,11 @@ function rAssistant(c, t) {
   html += '</div>';
   c.innerHTML = html;
 
-  // Scroll to bottom if messages exist
   if (hasMessages) {
     var chatEl = document.getElementById('aiChat');
     if (chatEl) chatEl.scrollTop = chatEl.scrollHeight;
   }
 
-  // Override mcon padding for this page
   c.style.padding = '0';
   c.style.display = 'flex';
   c.style.flexDirection = 'column';
@@ -1641,18 +1879,15 @@ async function sendAssistantMsg() {
   var timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
   TA.msgs.push({role:'user', text: text, time: timeStr});
 
-  // Hide welcome if visible
   var welcome = document.getElementById('aiWelcome');
   if (welcome) welcome.style.display = 'none';
 
-  // Add user message to chat
   var chatEl = document.getElementById('aiChat');
   var userDiv = document.createElement('div');
   userDiv.className = 'ai-msg user';
   userDiv.innerHTML = text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '<span class="msg-time">' + timeStr + '</span>';
   chatEl.appendChild(userDiv);
 
-  // Show typing indicator
   var typingDiv = document.createElement('div');
   typingDiv.className = 'ai-typing-full';
   typingDiv.id = 'aiTyping';
@@ -1669,7 +1904,7 @@ async function sendAssistantMsg() {
     return (m.role === 'user' ? 'Student: ' : 'Assistant: ') + m.text.replace(/<[^>]*>/g, '');
   }).join('\n');
 
-  var prompt = 'You are MedStudy AI Assistant — a friendly, highly knowledgeable medical tutor for bilingual (English/Vietnamese) medical students. Your role is to help students understand medical and biology concepts deeply.\n\nRules:\n1. Always respond in BOTH English and Vietnamese (English first, then Vietnamese)\n2. Use HTML formatting: <strong>bold</strong>, <em>italic</em>, <span class="kt">key terms</span>\n3. For formulas use: <div class="fb">formula here</div>\n4. For clinical relevance use: <div class="cbx"><h4><i class="fas fa-heartbeat"></i> Clinical Relevance</h4><p>content</p></div>\n5. For key concepts use: <div class="sbx"><h4><i class="fas fa-lightbulb"></i> Key Concept</h4><p>content</p></div>\n6. Be encouraging, accurate, and educational\n7. Keep responses well-structured with clear sections\n8. If asked to create quiz questions, format them clearly with options A-D\n\nCourse content context:\n' + context + '\n\nConversation history:\n' + chatHistory + '\n\nAnswer the student\'s latest question thoroughly and helpfully.';
+  var prompt = 'You are MedStudy AI Assistant — a friendly, highly knowledgeable medical tutor for bilingual (English/Vietnamese) medical students. Your role is to help students understand medical and biology concepts deeply and excel in their university exams.\n\nRules:\n1. Always respond in BOTH English and Vietnamese (English first, then Vietnamese)\n2. Use HTML formatting: <strong>bold</strong>, <em>italic</em>, <span class="kt">key terms</span>\n3. For formulas use: <div class="fb">formula here</div>\n4. For clinical relevance use: <div class="cbx"><h4><i class="fas fa-heartbeat"></i> Clinical Relevance</h4><p>content</p></div>\n5. For key concepts use: <div class="sbx"><h4><i class="fas fa-lightbulb"></i> Key Concept</h4><p>content</p></div>\n6. If University Exam Reference Materials are present in the context, strictly align your guidance and predicted exam questions with the institution\'s specific syllabus, exam structure, and questioning style.\n7. Be encouraging, accurate, and educational\n\nCourse content and University Exam Reference context:\n' + context + '\n\nConversation history:\n' + chatHistory + '\n\nAnswer the student\'s latest question thoroughly and helpfully.';
 
   try {
     var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey, {
@@ -1685,7 +1920,6 @@ async function sendAssistantMsg() {
     var replyTimeStr = replyTime.getHours().toString().padStart(2,'0') + ':' + replyTime.getMinutes().toString().padStart(2,'0');
     TA.msgs.push({role:'bot', text: reply, time: replyTimeStr});
 
-    // Remove typing, add bot message
     var typing = document.getElementById('aiTyping');
     if (typing) typing.remove();
     var botDiv = document.createElement('div');
@@ -1709,7 +1943,6 @@ async function sendAssistantMsg() {
   TA.sending = false;
   document.getElementById('aiSendBtn').disabled = false;
 
-  // Also sync to popup TA
   renderTAMessages();
 }
 
@@ -1740,6 +1973,10 @@ document.addEventListener('DOMContentLoaded', function() {
   var savedImp = localStorage.getItem('cb_imports');
   if (savedImp) {
     try { S.imp = JSON.parse(savedImp); } catch(e) {}
+  }
+  var savedRefs = localStorage.getItem('cb_references');
+  if (savedRefs) {
+    try { S.refs = JSON.parse(savedRefs); } catch(e) {}
   }
   // Close mobile menu on resize to desktop
   window.addEventListener('resize',function(){if(window.innerWidth>768)closeMobileMenu()});

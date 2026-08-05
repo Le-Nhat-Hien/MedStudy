@@ -382,14 +382,14 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .ai-send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
 .ai-empty-state{flex:1;display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:.85rem;text-align:center;padding:40px}
 
-/* ===== Gemini-Style Sidebar Mechanics ===== */
-.sidebar{width:var(--sw);min-width:var(--sw);height:100vh;background:var(--bg1);border-right:1px solid var(--br1);display:flex;flex-direction:column;z-index:100;flex-shrink:0;margin-left:0;transition:margin-left .32s cubic-bezier(.4,0,.2,1),opacity .25s ease,visibility .32s ease!important;visibility:visible;opacity:1}
-body.sb-collapsed .sidebar,.sidebar.collapsed{margin-left:calc(-1 * var(--sw))!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+/* ===== Gemini-Style Sidebar Engine ===== */
+.sidebar{width:var(--sw);min-width:var(--sw);height:100vh;background:var(--bg1);border-right:1px solid var(--br1);display:flex;flex-direction:column;z-index:100;flex-shrink:0;margin-left:0;transition:width .32s cubic-bezier(.4,0,.2,1),min-width .32s cubic-bezier(.4,0,.2,1),margin-left .32s cubic-bezier(.4,0,.2,1),opacity .25s ease,visibility .32s ease!important;visibility:visible;opacity:1;overflow:hidden}
+body.sb-collapsed .sidebar,.sidebar.collapsed{width:0!important;min-width:0!important;margin-left:calc(-1 * var(--sw))!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;border-right:none!important;padding:0!important}
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;width:100%;transition:all .32s cubic-bezier(.4,0,.2,1)}
-.lc{max-width:960px;margin:0 auto;transition:max-width .32s ease,padding .32s ease}
-body.sb-collapsed .lc,.sidebar.collapsed ~ .main .lc,.lc.side-mode{max-width:100%!important;padding-left:12px;padding-right:12px}
-.sb-toggle-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:38px!important;height:38px!important;border-radius:var(--r1)!important;background:var(--bg3)!important;color:var(--t1)!important;border:1px solid var(--br2)!important;cursor:pointer!important;font-size:1.1rem!important;transition:var(--tr)!important;flex-shrink:0!important}
-.sb-toggle-btn:hover{background:var(--bg4)!important;border-color:var(--ac1)!important;color:var(--ac1)!important}
+.lc{max-width:960px;margin:0 auto;transition:max-width .32s ease,width .32s ease,padding .32s ease}
+body.sb-collapsed .lc,.sidebar.collapsed ~ .main .lc,.lc.side-mode{max-width:100%!important;width:100%!important;padding-left:16px;padding-right:16px}
+.sb-toggle-btn,.btn-close-sidenav{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:36px!important;height:36px!important;border-radius:var(--r1)!important;background:var(--bg3)!important;color:var(--t1)!important;border:1px solid var(--br2)!important;cursor:pointer!important;font-size:1.05rem!important;transition:var(--tr)!important;flex-shrink:0!important}
+.sb-toggle-btn:hover,.btn-close-sidenav:hover{background:var(--bg4)!important;border-color:var(--ac1)!important;color:var(--ac1)!important}
 .sb2.side-by-side{display:grid!important;grid-template-columns:1fr 1fr!important;gap:24px!important;align-items:start!important}
 .sb2.side-by-side .cen{margin-bottom:0!important;padding-bottom:0!important;border-bottom:none!important;background:var(--bg3);padding:22px;border-radius:var(--r2);border:1px solid var(--br1)}
 @media(max-width:900px){.sb2.side-by-side{grid-template-columns:1fr!important}}
@@ -397,7 +397,13 @@ body.sb-collapsed .lc,.sidebar.collapsed ~ .main .lc,.lc.side-mode{max-width:100
 </head>
 <body>
 <aside class="sidebar" id="sidebar">
-<div class="sbrand"><h1><i class="fas fa-stethoscope"></i> MedStudy</h1><p>Bilingual Medical Lectures</p></div>
+<div class="sbrand">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <h1><i class="fas fa-stethoscope"></i> MedStudy</h1>
+    <button class="btn-close-sidenav" onclick="toggleSidebarToggle()" title="Đóng thanh bên" aria-label="Đóng thanh bên"><i class="fas fa-bars"></i></button>
+  </div>
+  <p>Bilingual Medical Lectures</p>
+</div>
 <nav class="snav" id="snav"></nav>
 <div class="sfoot">MedStudy — Medical Year 1<br>Bilingual Lecture Platform v3.0<br><div class="creator"><i class="fas fa-user-doctor"></i> Created by <strong style="font-size:1rem;background:linear-gradient(135deg,#0ea5e9,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Hiển The Doctor</strong></div></div>
 </aside>
@@ -405,7 +411,7 @@ body.sb-collapsed .lc,.sidebar.collapsed ~ .main .lc,.lc.side-mode{max-width:100
 
 <div class="main">
 <header class="mhdr">
-<button class="sb-toggle-btn" id="sbToggleBtn" onclick="toggleSidebarToggle()" title="Ẩn/Hiện Sidebar (Mở rộng đọc song song)"><i class="fas fa-outdent"></i></button>
+<button class="sb-toggle-btn" id="sbToggleBtn" onclick="toggleSidebarToggle()" title="Đóng/Mở thanh bên" aria-label="Đóng/Mở thanh bên"><i class="fas fa-bars"></i></button>
 <h2 id="ptitle">Dashboard</h2>
 <div class="hact">
 <button class="btn bs sm" onclick="toggleTA()" title="Teaching Assistant"><i class="fas fa-graduation-cap"></i><span class="btn-text"> Ask TA</span></button>
@@ -433,8 +439,7 @@ function toggleSidebarToggle() {
     if (sb) sb.classList.toggle('collapsed', S.sbCollapsed);
     var btn = document.getElementById('sbToggleBtn');
     if (btn) {
-      btn.innerHTML = S.sbCollapsed ? '<i class="fas fa-indent"></i>' : '<i class="fas fa-outdent"></i>';
-      btn.title = S.sbCollapsed ? 'Hiện Navigation Menu (Mở Sidebar)' : 'Thu gọn Sidebar vào trong (Đọc song song)';
+      btn.title = S.sbCollapsed ? 'Mở thanh bên' : 'Đóng thanh bên';
     }
     localStorage.setItem('med_sb_collapsed', S.sbCollapsed ? '1' : '0');
   }

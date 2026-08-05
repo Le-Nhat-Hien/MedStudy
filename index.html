@@ -383,9 +383,14 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .ai-empty-state{flex:1;display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:.85rem;text-align:center;padding:40px}
 
 /* Sidebar Collapse & Side-by-Side Dual-Pane Enhancements */
-.sidebar{transition:width .3s cubic-bezier(.4,0,.2,1),opacity .3s,min-width .3s!important}
+.sidebar{transition:width .3s cubic-bezier(.4,0,.2,1),min-width .3s cubic-bezier(.4,0,.2,1),opacity .3s!important}
 .sidebar.collapsed{width:0!important;min-width:0!important;opacity:0!important;overflow:hidden!important;border-right:none!important;padding:0!important;pointer-events:none!important}
+.sb-toggle-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:38px!important;height:38px!important;border-radius:var(--r1)!important;background:var(--bg3)!important;color:var(--t1)!important;border:1px solid var(--br2)!important;cursor:pointer!important;font-size:1.1rem!important;transition:var(--tr)!important;flex-shrink:0!important}
+.sb-toggle-btn:hover{background:var(--bg4)!important;border-color:var(--ac1)!important;color:var(--ac1)!important}
+.lc{max-width:960px;margin:0 auto;transition:max-width .3s ease}
+.sidebar.collapsed ~ .main .lc,.lc.side-mode{max-width:1400px!important}
 .sb2.side-by-side{display:grid!important;grid-template-columns:1fr 1fr!important;gap:24px!important;align-items:start!important}
+.sb2.side-by-side .cen{margin-bottom:0!important;padding-bottom:0!important;border-bottom:none!important;background:var(--bg3);padding:20px;border-radius:var(--r2);border:1px solid var(--br1)}
 @media(max-width:900px){.sb2.side-by-side{grid-template-columns:1fr!important}}
 </style>
 </head>
@@ -399,7 +404,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 
 <div class="main">
 <header class="mhdr">
-<button class="menu-toggle btn bs sm ic" id="menuToggle" onclick="toggleSidebarToggle(); if(typeof toggleMobileMenu==='function') toggleMobileMenu();" title="Toggle Sidebar (Ẩn/Hiện Navigation)" style="font-size:1.1rem;width:38px;height:38px"><i class="fas fa-bars"></i></button>
+<button class="sb-toggle-btn" id="sbToggleBtn" onclick="toggleSidebarToggle()" title="Ẩn/Hiện Sidebar (Dành không gian đọc song song)"><i class="fas fa-outdent"></i></button>
 <h2 id="ptitle">Dashboard</h2>
 <div class="hact">
 <button class="btn bs sm" onclick="toggleTA()" title="Teaching Assistant"><i class="fas fa-graduation-cap"></i><span class="btn-text"> Ask TA</span></button>
@@ -415,11 +420,27 @@ var S = { pg: 'dashboard', imp: [], refs: JSON.parse(localStorage.getItem('cb_re
 
 function toggleSidebarToggle() {
   S.sbCollapsed = !S.sbCollapsed;
-  document.getElementById('sidebar').classList.toggle('collapsed', S.sbCollapsed);
+  var sb = document.getElementById('sidebar');
+  if (sb) sb.classList.toggle('collapsed', S.sbCollapsed);
+  var btn = document.getElementById('sbToggleBtn');
+  if (btn) {
+    btn.innerHTML = S.sbCollapsed ? '<i class="fas fa-indent"></i>' : '<i class="fas fa-outdent"></i>';
+    btn.title = S.sbCollapsed ? 'Hiện Sidebar Navigation' : 'Ẩn Sidebar Navigation (Đọc song song)';
+  }
 }
 
 function toggleLayoutMode() {
   S.layoutMode = S.layoutMode === 'side' ? 'stack' : 'side';
+  if (S.layoutMode === 'side' && !S.sbCollapsed) {
+    S.sbCollapsed = true;
+    var sb = document.getElementById('sidebar');
+    if (sb) sb.classList.add('collapsed');
+    var btn = document.getElementById('sbToggleBtn');
+    if (btn) {
+      btn.innerHTML = '<i class="fas fa-indent"></i>';
+      btn.title = 'Hiện Sidebar Navigation';
+    }
+  }
   nav(S.pg);
 }
 
@@ -757,8 +778,8 @@ function rUnits(c, t) {
 
 function rUnit(c, t, u) {
   t.textContent = u.n + ': ' + u.t;
-  var html = '<div class="lc">';
-  html += '<div class="lnav"><button class="btn bs sm" onclick="nav(\'lectures\')"><i class="fas fa-th-large"></i> All Books</button><button class="btn bs sm" onclick="toggleLayoutMode()"><i class="fas ' + (S.layoutMode === 'side' ? 'fa-columns' : 'fa-align-justify') + '"></i> ' + (S.layoutMode === 'side' ? 'Side-by-Side (Song Song)' : 'Stacked (Trên/Dưới)') + '</button></div>';
+  var html = '<div class="lc ' + (S.layoutMode === 'side' ? 'side-mode' : '') + '">';
+  html += '<div class="lnav"><button class="btn bs sm" onclick="nav(\'lectures\')"><i class="fas fa-th-large"></i> All Books</button><button class="btn ' + (S.layoutMode === 'side' ? 'bp' : 'bs') + ' sm" onclick="toggleLayoutMode()"><i class="fas ' + (S.layoutMode === 'side' ? 'fa-columns' : 'fa-align-justify') + '"></i> ' + (S.layoutMode === 'side' ? 'Chế độ: Đọc Song Song (Side-by-Side)' : 'Chế độ: Trên/Dưới (Stacked)') + '</button></div>';
   html += '<div style="text-align:center;margin-bottom:28px">';
   html += '<div style="font-size:.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--ac1);font-weight:700;margin-bottom:6px">' + u.n + '</div>';
   html += '<h1 style="font-size:1.7rem;font-weight:900;margin-bottom:4px">' + u.t + '</h1>';
@@ -794,10 +815,10 @@ function rChapter(c, t, u, chid) {
   var ch = u.ch.find(function(x) { return x.id === chid; });
   if (!ch) return rUnit(c, t, u);
   t.textContent = ch.t;
-  var html = '<div class="lc">';
+  var html = '<div class="lc ' + (S.layoutMode === 'side' ? 'side-mode' : '') + '">';
   html += '<div class="lnav">';
   html += '<button class="btn bs sm" onclick="nav(\'' + u.id + '\')"><i class="fas fa-chevron-left"></i> ' + u.n + '</button>';
-  html += '<button class="btn bs sm" onclick="toggleLayoutMode()"><i class="fas ' + (S.layoutMode === 'side' ? 'fa-columns' : 'fa-align-justify') + '"></i> ' + (S.layoutMode === 'side' ? 'Side-by-Side' : 'Stacked') + '</button>';
+  html += '<button class="btn ' + (S.layoutMode === 'side' ? 'bp' : 'bs') + ' sm" onclick="toggleLayoutMode()"><i class="fas ' + (S.layoutMode === 'side' ? 'fa-columns' : 'fa-align-justify') + '"></i> ' + (S.layoutMode === 'side' ? 'Đọc Song Song (Side-by-Side)' : 'Đọc Trên/Dưới (Stacked)') + '</button>';
   html += '<button class="btn bs sm" onclick="nav(\'lectures\')"><i class="fas fa-th-large"></i> All Books</button>';
   html += '</div>';
   html += '<div style="text-align:center;margin-bottom:28px">';
@@ -828,10 +849,10 @@ function rSection(c, t, u, chid, sid) {
   var si = ch.sec.indexOf(s);
   var prev = si > 0 ? ch.sec[si - 1] : null;
   var next = si < ch.sec.length - 1 ? ch.sec[si + 1] : null;
-  var html = '<div class="lc">';
+  var html = '<div class="lc ' + (S.layoutMode === 'side' ? 'side-mode' : '') + '">';
   html += '<div class="lnav">';
   html += prev ? '<button class="btn bs sm" onclick="nav(\'' + u.id + ':' + chid + ':' + prev.id + '\')"><i class="fas fa-chevron-left"></i> Prev</button>' : '<div></div>';
-  html += '<button class="btn bs sm" onclick="toggleLayoutMode()"><i class="fas ' + (S.layoutMode === 'side' ? 'fa-columns' : 'fa-align-justify') + '"></i> ' + (S.layoutMode === 'side' ? 'Side-by-Side' : 'Stacked') + '</button>';
+  html += '<button class="btn ' + (S.layoutMode === 'side' ? 'bp' : 'bs') + ' sm" onclick="toggleLayoutMode()"><i class="fas ' + (S.layoutMode === 'side' ? 'fa-columns' : 'fa-align-justify') + '"></i> ' + (S.layoutMode === 'side' ? 'Đọc Song Song (Side-by-Side)' : 'Đọc Trên/Dưới (Stacked)') + '</button>';
   html += next ? '<button class="btn bs sm" onclick="nav(\'' + u.id + ':' + chid + ':' + next.id + '\')">Next <i class="fas fa-chevron-right"></i></button>' : '<div></div>';
   html += '</div>';
   html += '<div style="text-align:center;margin-bottom:28px">';

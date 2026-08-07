@@ -130,14 +130,14 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .gf{background:var(--bg2);border:1px solid var(--br1);border-radius:var(--r3);padding:28px}
 .glo{text-align:center;padding:36px;color:var(--t3)}.glo i{font-size:2rem;animation:sp 1s linear infinite;margin-bottom:10px;display:block}
 @keyframes sp{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.fc{max-width:580px;margin:0 auto;text-align:center}
-.fw{perspective:1000px;margin-bottom:28px}
-.flc{width:100%;min-height:300px;position:relative;transition:transform .6s;transform-style:preserve-3d;cursor:pointer;border-radius:var(--r3)}
+.fc{max-width:620px;margin:0 auto;text-align:center;width:100%}
+.fw{perspective:1000px;margin-bottom:20px}
+.flc{width:100%;min-height:300px;position:relative;display:grid;transition:transform .6s;transform-style:preserve-3d;cursor:pointer;border-radius:var(--r3);align-items:stretch}
 .flc.flp{transform:rotateY(180deg)}
-.ff{position:absolute;width:100%;min-height:300px;backface-visibility:hidden;border-radius:var(--r3);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;border:1px solid var(--br1)}
+.ff{grid-area:1/1;width:100%;min-height:300px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r3);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;border:1px solid var(--br1);overflow-wrap:break-word;word-break:break-word;text-align:center}
 .ffr{background:linear-gradient(135deg,var(--bg2),var(--bg3))}
 .ffbk{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(6,182,212,.1));transform:rotateY(180deg);border-color:rgba(16,185,129,.3)}
-.fctrl{display:flex;gap:12px;justify-content:center}
+.fctrl{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:4px}
 .fcnt{font-size:.82rem;color:var(--t3);margin-bottom:18px}
 /* ===== Mobile Responsive ===== */
 .menu-toggle{display:none;background:none;border:none;color:var(--t1);font-size:1.3rem;cursor:pointer;padding:6px 8px;border-radius:var(--r1);transition:var(--tr);flex-shrink:0}
